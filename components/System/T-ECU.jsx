@@ -1,18 +1,18 @@
-import React, {useState, useRef, useEffect, useCallback} from 'react';
+import React, {useState, /* useRef, useEffect, useCallback */} from 'react';
 import {
   StyleSheet,
   Text,
   View,
   Image,
   ImageBackground,
-  Pressable,
+  //Pressable,
   TouchableOpacity,
-  Animated,
+  //Animated,
   SafeAreaView,
-  Button,
-  ScrollView,
-  TouchableWithoutFeedback,
-  FlatList
+  //Button,
+  //ScrollView,
+  //TouchableWithoutFeedback,
+  //FlatList
 } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 const T_ECU = () =>{

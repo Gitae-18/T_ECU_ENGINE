@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect, useCallback} from 'react';
+import React, {useState, /* useRef, useEffect, useCallback */} from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,8 +7,8 @@ import {
   ImageBackground,
   Pressable,
   TouchableOpacity,
-  Animated,
-  ScrollView,
+ //Animated,
+  //ScrollView,
   FlatList
 } from 'react-native';
 import Sidebar from './Sidebar';

@@ -2,7 +2,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import PropTypes from 'prop-types';
 import React,{ useState , useRef, useLayoutEffect }from 'react';
 
-import { StyleSheet, Text,  View,Image, ImageBackground, Pressable, TouchableOpacity, Animated} from 'react-native';
+import { StyleSheet, Text,  View,Image, ImageBackground, /* Pressable, */ TouchableOpacity, Animated} from 'react-native';
 
   
   const Sidebar = ({visible,setSidebar,navigation}) => {

@@ -5,7 +5,7 @@
  * @format
  */
 
-import React,{ useState }from 'react';
+import React,{ /* useState */ }from 'react';
 
 
 
@@ -16,23 +16,23 @@ import {
  /*  SafeAreaView, */
   /* ScrollView, */
 /*   StatusBar, */
-  StyleSheet,
-  Text,
+  //StyleSheet,
+  //Text,
   useColorScheme,
-  View,
-  Image,
-  ImageBackground,
-  Pressable,
-  TouchableOpacity,
+  //View,
+  //Image,
+  //ImageBackground,
+  //Pressable,
+  //TouchableOpacity,
 } from 'react-native';
 
-import {
+/* import {
   Colors,
   DebugInstructions,
   Header,
   LearnMoreLinks,
   ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+} from 'react-native/Libraries/NewAppScreen'; */
 
 
 const App = () => {

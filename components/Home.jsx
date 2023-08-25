@@ -1,5 +1,5 @@
-import React,{ useState , useRef, useEffect , useCallback, useLayoutEffect }from 'react';
-import { StyleSheet, Text,  View,Image, ImageBackground, Pressable, TouchableOpacity, Animated, SafeAreaView, PermissionsAndroid, Platform} from 'react-native';
+import React,{ useState , useRef, /* useEffect , useCallback, */ useLayoutEffect }from 'react';
+import { StyleSheet, Text,  View,Image, ImageBackground, /* Pressable, */ TouchableOpacity, Animated, SafeAreaView, /* PermissionsAndroid, Platform */} from 'react-native';
 import Sidebar from './Sidebar';
 import PropTypes from 'prop-types';
 import MainButton from './MainButton';

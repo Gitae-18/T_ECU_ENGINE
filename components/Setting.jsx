@@ -1,5 +1,5 @@
-import React,{ useState , useRef, useEffect , useCallback }from 'react';
-import { StyleSheet, Text,  View,Image, ImageBackground, Pressable, TouchableOpacity, Animated, FlatList} from 'react-native';
+import React,{ useState , /* useRef, useEffect , useCallback  */}from 'react';
+import { StyleSheet, Text,  View,Image, ImageBackground, /* Pressable, */ TouchableOpacity, /* Animated, */ FlatList} from 'react-native';
 import Sidebar from './Sidebar';
 import PropTypes from 'prop-types';
 import { SafeAreaView } from 'react-native-safe-area-context';

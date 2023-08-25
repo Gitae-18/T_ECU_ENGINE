@@ -1,25 +1,24 @@
-import React, {memo,useState, useRef, useEffect, useCallback, useLayoutEffect} from 'react';
+import React from 'react';
 import {
-  StyleSheet,
+  //StyleSheet,
   Text,
   View,
-  Image,
-  ImageBackground,
-  Pressable,
-  TouchableOpacity,
-  Animated,
-  SafeAreaView,
-  Button,
-  ScrollView,
-  TouchableWithoutFeedback,
-  FlatList,
-  linearGradient
+  //Image,
+  //ImageBackground,
+  //Pressable,
+  //TouchableOpacity,
+  //Animated,
+  //SafeAreaView,
+  //Button,
+  //ScrollView,
+  //TouchableWithoutFeedback,
+  //FlatList,
+  //linearGradient,
 } from 'react-native';
-import {VictoryLine, VictoryChart, VictoryTheme, VictoryBar, VictoryAxis, VictoryLabel, VictoryContainer, VictoryTooltip, /* Defs, LinearGradient, Stop */} from 'victory-native';
+import { VictoryChart, VictoryBar, VictoryAxis, /* Defs, LinearGradient, Stop */} from 'victory-native';
 
 
 const MileChart = ({data}) => {
-   
     return(
         <View>
           <VictoryChart width={800}height={300} domainPadding={{ x: 10 }}>
@@ -34,13 +33,7 @@ const MileChart = ({data}) => {
                 },
             }}
               data={data}
-              animate={{onLoad:{duration:1000}}}
-            /*   labelComponent={ <VictoryTooltip
-                cornerRadius={0}
-                flyoutStyle={{ fill: 'white' }}
-                style={{ fontSize: 10 }}
-                text={`${datum.label}`}
-              />} */
+              animate={{onLoad:{duration:500}}}
               events={[{
                 target: "data",
                 eventHandlers: {

@@ -1,52 +1,48 @@
-import React, {memo,useState, useRef, useEffect, useCallback, useLayoutEffect} from 'react';
+import React, {useState, useEffect, useLayoutEffect, useMemo} from 'react';
 import {
   StyleSheet,
   Text,
   View,
   Image,
   ImageBackground,
-  Pressable,
+  //Pressable,
   TouchableOpacity,
-  Animated,
-  SafeAreaView,
-  Button,
-  ScrollView,
-  TouchableWithoutFeedback,
-  FlatList,
-  linearGradient
+  //Animated,
+  //SafeAreaView,
+  //Button,
+  //ScrollView,
+  //TouchableWithoutFeedback,
+  //FlatList,
+  //linearGradient,
+  LogBox
 } from 'react-native';
-import {Defs,LinearGradient,Stop,Svg} from 'react-native-svg';
-import {VictoryLine, VictoryChart, VictoryTheme, VictoryBar, VictoryAxis, VictoryLabel, VictoryContainer, VictoryTooltip, /* Defs, LinearGradient, Stop */} from 'victory-native';
+/* import {Defs,LinearGradient,Stop,Svg} from 'react-native-svg'; */
+//import {VictoryLine, VictoryChart, VictoryTheme, VictoryBar, VictoryAxis, VictoryLabel, VictoryContainer, VictoryTooltip, Defs, LinearGradient, Stop} from 'victory-native';
 import DatePicker from 'react-native-date-picker';
 import MileChart from './Charts/MileChart';
 import VehicleInfo from './VehicleInfo';
 import ImageButton from './ImageButton';
 const Mile = () =>{
-    const [pickerValue, setPickerValue] = useState("등록된 T-ECU ID");
     const [open, setOpen] = useState(false);
     const [open2,setOpen2] = useState(false);
     const [date, setDate] = useState(new Date());
     const [today,setToday] = useState(new Date());
     const [year,setYear] = useState('00/00/00');
     const [year2,setYear2] = useState('00/00/00');
-    const [value, setValue] = useState('등록된 T-ECU ID');
-    const [items, setItems] = useState([
-        {label: '등록된 T-ECU ID', value: '0'},
-        {label: 'aaa', value: 'a'},
-        {label: 'bbb', value: 'b'}
-        ]);
-    const [data, setData] = useState(generateRandomData());
+    const [data, setData] = useState(useMemo(()=>generateRandomData(),[]));
         
     function generateRandomData() {
           return Array.from({ length: 30 }, (_, index) => ({
             x: String(index + 1).padStart(2, '0'),
             y: Math.floor(Math.random() * 101),
           }));
-        }
+        }    
     useLayoutEffect(()=>{
-      setData(generateRandomData())
+    setData(generateRandomData())
      },[])
-
+     useEffect(()=>{
+      LogBox.ignoreLogs(['Require cycle'])
+    },[])
     const lastDate = () =>{
       const year = date.getFullYear();
       const month = date.getMonth()+1<10?'0'+(date.getMonth()+1):date.getMonth()+1;

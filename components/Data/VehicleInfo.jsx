@@ -1,22 +1,22 @@
-import React, {memo,useState, useRef, useEffect, useCallback, useLayoutEffect} from 'react';
-import { check, PERMISSIONS, request } from 'react-native-permissions';
+import React, {memo,useState, /* useRef, useEffect, useCallback, useLayoutEffect */} from 'react';
+//import { check, PERMISSIONS, request } from 'react-native-permissions';
 import {
-  StyleSheet,
+  //StyleSheet,
   Text,
   View,
   Image,
   ImageBackground,
-  Pressable,
+  //Pressable,
   TouchableOpacity,
-  Animated,
-  SafeAreaView,
-  Button,
-  ScrollView,
-  TouchableWithoutFeedback,
-  FlatList,
-  linearGradient,
+  //Animated,
+ // SafeAreaView,
+ // Button,
+ // ScrollView,
+ // TouchableWithoutFeedback,
+ // FlatList,
+ // linearGradient,
   Linking,
-  Share,
+ // Share,
 } from 'react-native';
 import XLSX from 'xlsx';
 import RNFS from 'react-native-fs';

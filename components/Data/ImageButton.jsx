@@ -1,19 +1,19 @@
-import React, {memo,useState, useRef, useEffect, useCallback, useLayoutEffect} from 'react';
+import React, {/* memo, */useState, /* useRef, useEffect, useCallback, useLayoutEffect */} from 'react';
 import {
-  StyleSheet,
+//StyleSheet,
   Text,
   View,
-  Image,
+//Image,
   ImageBackground,
-  Pressable,
+  //Pressable,
   TouchableOpacity,
-  Animated,
-  SafeAreaView,
-  Button,
-  ScrollView,
-  TouchableWithoutFeedback,
-  FlatList,
-  linearGradient
+  //Animated,
+  //SafeAreaView,
+  //Button,
+  //ScrollView,
+  //TouchableWithoutFeedback,
+  //FlatList,
+  //linearGradient
 } from 'react-native';
 
 const ImageButton = () => {

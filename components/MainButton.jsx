@@ -1,5 +1,5 @@
-import React,{ useState , useRef, useEffect , useCallback, useLayoutEffect }from 'react';
-import { StyleSheet, Text,  View,Image, ImageBackground, Pressable, TouchableOpacity, Animated, SafeAreaView} from 'react-native';
+import React,{/*  useState , useRef, useEffect , useCallback, useLayoutEffect */ }from 'react';
+import { /* StyleSheet, Text,  */ View,Image, /* ImageBackground, Pressable, */ TouchableOpacity, /* Animated, SafeAreaView */} from 'react-native';
 
 const MainButton = () => {
     return(
