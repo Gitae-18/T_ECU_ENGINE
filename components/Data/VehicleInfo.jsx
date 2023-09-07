@@ -117,20 +117,56 @@ const VehicleInfo = () => {
   
         // 앱 내부 저장소 경로
         const internalFilePath = RNFS.DocumentDirectoryPath + '/' + excelFileName;
-  
+        const fileUrl = `file://${internalFilePath}`
         console.log('Writing Excel file...');
+
+        RNFS.readFile(internalFilePath,'ascii')
+          .then(res => {
+            console.log('Excel file :', res);  
+            // 파일이 생성되면 자동으로 다운로드
+            //Linking.openURL(`file://${internalFilePath}`)
+          })          
+          .catch((error) => {
+            console.error('error message:', error);
+          });    
         RNFS.writeFile(internalFilePath, wbout, 'ascii')
           .then(() => {
             console.log('Excel file successfully created and saved:', internalFilePath);
             setFilePath(internalFilePath); // 파일 경로 저장
   
             // 파일이 생성되면 자동으로 다운로드
-            Linking.openURL(`file://${internalFilePath}`)
+            //Linking.openURL(`file://${internalFilePath}`)
+            downloadFile(internalFilePath);
           })          
           .catch((error) => {
             console.error('Error while creating or saving Excel file:', error);
-          });
+          });         
       };
+      const downloadFile = (filePath) => {     
+        const internalFilePath = RNFS.DocumentDirectoryPath + '/nameinfo.xlsx';      
+        RNFS.downloadFile({
+            fromUrl/* :`file://${internalFilePath}` */:  'https://facebook.github.io/react-native/img/header_logo.png',
+            toFile:filePath
+         }).promise
+         .then((response) => {
+            if(response.statusCode === 200){
+                console.log('파일 다운로드 성공');
+            }
+            else {
+                console.error('파일 다운로드 실패',response);
+            }
+         }).catch((error) => {
+            console.error('파일 다운로드 중 오류 발생',error);
+         })
+         RNFS.copyFile(filePath, internalFilePath)
+         .then(() => {
+           console.log('파일 다운로드 성공');
+           // 이제 destinationFilePath에 다운로드된 파일이 있습니다.
+         })
+         .catch((error) => {
+           console.error('파일 다운로드 중 오류 발생', error);
+         });
+      }
     return(
         <View style={{flex:1,top:0}}>
         <Text style={{ color: 'white',fontWeight: 'bold',position: 'absolute',fontSize: 20,left:30,top:80,}}>· 차량 등록 정보</Text>
