@@ -19,66 +19,39 @@ import BleManager, {
     BleDisconnectPeripheralEvent,
   } from 'react-native-ble-manager';
 import styled from 'styled-components/native';
+import { Buffer } from 'buffer';
+import { useDispatch } from 'react-redux';
+import { setBluetoothData } from './store/bluetoothSlice';
 const SECONDS_TO_SCAN_FOR = 7;
-const SERVICE_UUIDS = [];
+const SERVICE_UUIDS = [/* '00002A05-0000-1000-8000-00805F9B34FB', *//* 'e319e2fd-5d4c-4d16-935a-7f6e6453a2ae' */];
 const ALLOW_DUPLICATES = true;
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
-
+const service = '1805';
+const lengthCharacteristic = '2a2b';
 BleManagerModule.Peripheral = {};
-
 const BlueToothModal = ({isVisible,closeModal,setModalVisible}) => {
-   /*  const [devices, setDevices] = useState([]);
-    useEffect(() => {
-        if (isVisible) {
-          startScanning();
-        } else {
-          stopScanning();
-        }
-    
-        return () => {
-          stopScanning();
-        };
-      }, [isVisible]);
-    
-      const startScanning = () => {
-        BleManager.start({ showAlert: false })
-          .then(() => {
-            return BleManager.scan([], 5, true);
-          })
-          .then(() => {
-            console.log('Scanning...');
-          })
-          .catch((error) => {
-            console.error('Error while scanning:', error);
-          });
-      };
-    
-      const stopScanning = () => {
-        BleManager.stopScan()
-          .then(() => {
-            console.log('Scan stopped');
-          })
-          .catch((error) => {
-            console.error('Error while stopping scan:', error);
-          });
-      }; */
       const [isScanning, setIsScanning] = useState(false);
       const [peripherals, setPeripherals] = useState(new Map());
-    
-    
+      const [data, setData] = useState('');
+      const [bluetoothData, setBluetoothData] = useState('');
+      const dispatch = useDispatch();
       const addOrUpdatePeripheral = (id, updatedPeripheral) => {
         setPeripherals(map => new Map(map.set(id, updatedPeripheral)));
       };
-    
+      
+      const saveBluetoothData = () => {
+        dispatch(setBluetoothData(bluetoothData));
+      }
       const startScan = () => {
+        
         if (!isScanning) {
           setPeripherals(new Map());
     
           try {
             console.debug('[startScan] starting scan...');
             setIsScanning(true);
-            BleManager.scan(SERVICE_UUIDS, SECONDS_TO_SCAN_FOR, ALLOW_DUPLICATES, {
+            BleManager.scan(SERVICE_UUIDS, 10, false, {
               matchMode: BleScanMatchMode.Sticky,
               scanMode: BleScanMode.LowLatency,
               callbackType: BleScanCallbackType.AllMatches,
@@ -87,7 +60,7 @@ const BlueToothModal = ({isVisible,closeModal,setModalVisible}) => {
                 console.debug('[startScan] scan promise returned successfully.');
                 setTimeout(() => {
                   handleStopScan();
-                }, SECONDS_TO_SCAN_FOR * 100);
+                }, 100);
               })
               .catch(err => {
                 console.error('[startScan] ble scan returned in error', err);
@@ -98,14 +71,21 @@ const BlueToothModal = ({isVisible,closeModal,setModalVisible}) => {
         }
       };
     
+     
       const handleStopScan = () => {
+        if(isScanning){
         setIsScanning(false);
         BleManager.stopScan();
+       /*  bleManagerEmitter.addListener("BleManagerStopScan", (args) => {
+          return ;
+        }); */
+       
         console.debug('Scan is stopped');
-        return;
+        }
+        return ;        
       };
     
-      const handleDisconnectedPeripheral = event => {
+      /* const handleDisconnectedPeripheral = event => {
         let peripheral = peripherals.get(event.peripheral);
         if (peripheral) {
           console.debug(
@@ -117,27 +97,47 @@ const BlueToothModal = ({isVisible,closeModal,setModalVisible}) => {
         console.debug(
           `[handleDisconnectedPeripheral][${event.peripheral}] disconnected.`,
         );
-      };
+      }; */
     
-      const handleUpdateValueForCharacteristic = data => {
+      const handleUpdateValueForCharacteristic = (data) => {
         console.debug(
           `[handleUpdateValueForCharacteristic] received data from '${data.peripheral}' with characteristic='${data.characteristic}' and value='${data.value}'`,
         );
+        const value = bytesToString(data);
+        console.log('data:' + value);
+        console.debug(data);
+        setData(value);
+        handleReadData(data.peripheral);
       };
-    
-      const handleDiscoverPeripheral = peripheral => {
-        console.debug('[handleDiscoverPeripheral] new BLE peripheral=', peripheral);
+        const handleDiscoverPeripheral = peripheral => {
+        console.debug('[handleDiscoverPeripheral] new BLE peripheral=', peripheral.name);
+        console.log(peripheral);
+        
         if (!peripheral.name) {
           peripheral.name = 'NO NAME';
         }
+        else{
         addOrUpdatePeripheral(peripheral.id, peripheral);
+        }
       };
       const handleReadData = (peripheral) => {
-        BleManager.read(peripheral).then((readData) => {
+     
+        BleManager.read(peripheral.id, service , lengthCharacteristic).then((readData) => {
           console.log("Read: " + readData);
           const buffer = Buffer.from(readData);
-	        const sensorData = buffer.readUInt8(1,true);
+          const sensorData = buffer.readUInt8(1, true);
+          console.log(sensorData);
         })
+        .catch((error) => {
+          console.error("Read error: ", error);
+        });
+        BleManager.startNotification(peripheral.id, service, lengthCharacteristic)
+        .then(() => {
+          console.log('Started notifications for data reception');
+        })
+        .catch((error) => {
+          console.error('Notification error:', error);
+        });
       }
       const togglePeripheralConnection = async peripheral => {
         if (peripheral && peripheral.connected) {
@@ -153,7 +153,7 @@ const BlueToothModal = ({isVisible,closeModal,setModalVisible}) => {
           await connectPeripheral(peripheral);
         }
       };
-    
+                               
       const retrieveConnected = async () => {
         try {
           const connectedPeripherals = await BleManager.getConnectedPeripherals();
@@ -172,15 +172,15 @@ const BlueToothModal = ({isVisible,closeModal,setModalVisible}) => {
           console.error('[retrieveConnected] unable to retrieve connected peripherals.', error);
         }
       };
-    
-      const connectPeripheral = async peripheral => {
+      
+      const connectPeripheral = async peripheral => {  
         try {
           if (peripheral) {
             addOrUpdatePeripheral(peripheral.id, { ...peripheral, connecting: true });
-    
+            console.log(peripheral.id)
             await BleManager.connect(peripheral.id);
             console.debug(`[connectPeripheral][${peripheral.id}] connected.`);
-    
+            console.log('Bluetooth 기기가 연결되었습니다:', peripheral.id);
             addOrUpdatePeripheral(peripheral.id, {
               ...peripheral,
               connecting: false,
@@ -194,12 +194,11 @@ const BlueToothModal = ({isVisible,closeModal,setModalVisible}) => {
               `[connectPeripheral][${peripheral.id}] retrieved peripheral services`,
               peripheralData,
             );
-    
             const rssi = await BleManager.readRSSI(peripheral.id);
             console.debug(
               `[connectPeripheral][${peripheral.id}] retrieved current RSSI value: ${rssi}.`,
-            );
-    
+            );  
+            handleReadData(peripheral)
             if (peripheralData.characteristics) {
               for (let characteristic of peripheralData.characteristics) {
                 if (characteristic.descriptors) {
@@ -222,8 +221,13 @@ const BlueToothModal = ({isVisible,closeModal,setModalVisible}) => {
                       );
                     }
                   }
+                  
                 }
               }
+              bleManagerEmitter.addListener(
+                'BleManagerDidUpdateValueForCharacteristic',
+                handleUpdateValueForCharacteristic,
+              )
             }
     
             let p = peripherals.get(peripheral.id);
@@ -245,6 +249,7 @@ const BlueToothModal = ({isVisible,closeModal,setModalVisible}) => {
     
       useEffect(() => {
         try {
+         
           BleManager.start({ showAlert: false })
             .then(() => console.debug('BleManager started.'))
             .catch(error =>
@@ -258,18 +263,17 @@ const BlueToothModal = ({isVisible,closeModal,setModalVisible}) => {
           bleManagerEmitter.addListener(
             'BleManagerDiscoverPeripheral',
             handleDiscoverPeripheral,
+            
           ),
           bleManagerEmitter.addListener('BleManagerStopScan', handleStopScan),
-          bleManagerEmitter.addListener(
+         /*  bleManagerEmitter.addListener(
             'BleManagerDisconnectPeripheral',
             handleDisconnectedPeripheral,
-          ),
-          bleManagerEmitter.addListener(
-            'BleManagerDidUpdateValueForCharacteristic',
-            handleUpdateValueForCharacteristic,
-          ),
+          ), */
+         
         ];
     
+       
         handleAndroidPermissions();
     
         return () => {
@@ -279,6 +283,44 @@ const BlueToothModal = ({isVisible,closeModal,setModalVisible}) => {
           }
         };
       }, []);
+      /* useEffect(() => {
+        BleManager.start({ showAlert: false }).then(() => {
+          console.log('Bluetooth is enabled');
+        }).catch((error) => {
+          console.error('Error enabling Bluetooth', error);
+        });
+    
+        const discoverPeripheralListener = BleManager.onPeripheralDiscover(peripheral => {
+          console.log('Discovered peripheral:', peripheral);
+          setDevices(devices => [...devices, peripheral]);
+        });
+    
+        return () => {
+          discoverPeripheralListener.remove();
+        };
+      }, []); */
+    
+     /*  const startScan = () => {
+        if (!isScanning) {
+          BleManager.scan([], 15, true).then(() => {
+            console.log('Scanning started');
+            setIsScanning(true);
+          }).catch((error) => {
+            console.error('Error starting scan', error);
+          });
+        }
+      }; */
+    
+     /*  const stopScan = () => {
+        if (isScanning) {
+          BleManager.stopScan().then(() => {
+            console.log('Scanning stopped');
+            setIsScanning(false);
+          }).catch((error) => {
+            console.error('Error stopping scan', error);
+          });
+        }
+      }; */
     
       const handleAndroidPermissions = () => {
         if (Platform.OS === 'android' && Platform.Version >= 31) {
@@ -341,9 +383,6 @@ const BlueToothModal = ({isVisible,closeModal,setModalVisible}) => {
         );
       };
     
-
-/*       const [modalVisible, setModalVisible] = useState<boolean>(false); */
-      //Output을 State로 받아서 화면에 표출하거나 정보 값으로 활용
       const [modalOutput, setModalOutput] = useState("Open Modal");
       return (
         <StyledSafeAreaView>
@@ -366,15 +405,20 @@ const BlueToothModal = ({isVisible,closeModal,setModalVisible}) => {
           </Text>
         </Pressable>
 
-        <Pressable style={styles.scanButton} onPress={retrieveConnected}>
+        {/* <Pressable style={styles.scanButton} onPress={retrieveConnected}>
           <Text style={styles.scanButtonText}>
             {'Retrieve connected peripherals'}
           </Text>
-        </Pressable>
+        </Pressable> */}
 
         <Pressable style={styles.scanButton} onPress={handleStopScan}>
           <Text style={styles.scanButtonText}>
             {'Stop scanning'}
+          </Text>
+        </Pressable>
+        <Pressable style={styles.scanButton} onPress={handleReadData}>
+          <Text style={styles.scanButtonText}>
+            {'Read Data'}
           </Text>
         </Pressable>
 
@@ -406,7 +450,7 @@ const BlueToothModal = ({isVisible,closeModal,setModalVisible}) => {
                     closeModal();
                 }}
               >
-                <Text style={{ alignSelf: "center" }}>취소</Text>
+                <Text style={{ alignSelf: "center", color:'black' }}>취소</Text>
               </StyledModalButton>
             </StyledModalContainer>
           </Modal>
@@ -483,28 +527,33 @@ const boxShadow = {
       padding: 4,
       paddingRight: 12,
       textAlign: 'right',
+      
     },
     peripheralName: {
       fontSize: 16,
       textAlign: 'center',
       padding: 10,
+      color:'black'
     },
     rssi: {
       fontSize: 12,
       textAlign: 'center',
       padding: 2,
+      color:'black'
     },
     peripheralId: {
       fontSize: 12,
       textAlign: 'center',
       padding: 2,
       paddingBottom: 20,
+      color:'black'
     },
     row: {
       marginLeft: 10,
       marginRight: 10,
       borderRadius: 20,
       ...boxShadow,
+      
     },
     noPeripherals: {
       margin: 10,
@@ -522,8 +571,8 @@ position:absolute;
 const StyledModalContainer = styled.View`
     flex-direction: column;
     align-items: center;
-    width:320px;
-    height:400px;
+    width:480px;
+    height:500px;
     background-color:rgba(255,255,255,1);
     border-radius:10px;
 `;
@@ -535,7 +584,7 @@ justify-content:center;
 `;
 const StyledModalGradeWrapper = styled.View`
   flex: 4;
-  width: 320px;
+  width: 460px;
   justify-content: center;
 `;
 

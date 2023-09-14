@@ -34,7 +34,6 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen'; */
 
-
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
 

@@ -3,14 +3,38 @@ package com.tecu_engine;
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
+import android.view.WindowManager;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 
 public class MainActivity extends ReactActivity {
-
   /**
    * Returns the name of the main component registered from JavaScript. This is used to schedule
    * rendering of the component.
    */
+  @Override
+    protected void onCreate(Bundle savedInstanceState) {
+       super.onCreate(savedInstanceState);
+      // 상태 바(상단 바)를 숨깁니다.
+      getWindow().setFlags(
+      WindowManager.LayoutParams.FLAG_FULLSCREEN,
+      WindowManager.LayoutParams.FLAG_FULLSCREEN
+    );
+    int uiOptions = getWindow().getDecorView().getSystemUiVisibility();
+            int newUiOptions = uiOptions;
+            boolean isImmersiveModeEnabled = ((uiOptions | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY) == uiOptions);
+            if (isImmersiveModeEnabled) {
+                Log.i("Is on?", "Turning immersive mode mode off. ");
+            } else {
+                Log.i("Is on?", "Turning immersive mode mode on.");
+            }
+            newUiOptions ^= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+            newUiOptions ^= View.SYSTEM_UI_FLAG_FULLSCREEN;
+            newUiOptions ^= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+            getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
+    }
+    
   @Override
   protected String getMainComponentName() {
     return "TECU_ENGINE";
