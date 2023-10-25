@@ -116,9 +116,9 @@ const Setting = ({navigation}) => {
     return(
       <SafeAreaView style={{ flex: 1, backgroundColor: 'black', flexDirection: 'row' }}>
       <View style={{ flex: 1 }}>
-        <ImageBackground source={require('../assets/images/engine/Homescreen.png')} style={Imgstyle.bg}>
+        <ImageBackground source={require('../assets/images/engine/Homescreen.png')} style={Imgstyle.bg} resizeMode='stretch'>
           <TouchableOpacity style={styles.menuButton} onPress={toggleSidebar}>
-          <ImageBackground source={require('../assets/images/engine/defaultbtn.png')} style={styles.default}>
+          <ImageBackground source={require('../assets/images/engine/Rectangle_90.png')} style={styles.default} resizeMode="contain">
                  <Image resizeMode='center' source={require('../assets/images/engine/menu.png')} style={Imgstyle.menu}
                   ></Image>
                  </ImageBackground>
@@ -204,19 +204,12 @@ const Setting = ({navigation}) => {
             style={{ flex: 1, paddingVertical: 10, top: 45 }}
             data={[
               { key: 'tab1', text: 'T-ECU', left: 30, onPressIn: handlePressInBg1, onPressOut: handlePressOutBg1 },
-              { key: 'tab2', text: 'Oil Filter', left: 50, onPressIn: handlePressInBg2, onPressOut: handlePressOutBg2 },
+              /* { key: 'tab2', text: 'Oil Filter', left: 50, onPressIn: handlePressInBg2, onPressOut: handlePressOutBg2 },
               { key: 'tab3', text: 'Oil Pressure', left: 670, onPressIn: handlePressInBg3, onPressOut: handlePressOutBg3 },
               { key: 'tab4', text: 'Anti Rollback', left: 670, onPressIn: handlePressInBg4, onPressOut: handlePressOutBg4 },
-              { key: 'tab5', text: 'Jerk Prevent', left: 670, onPressIn: handlePressInBg5, onPressOut: handlePressOutBg5 },
+              { key: 'tab5', text: 'Jerk Prevent', left: 670, onPressIn: handlePressInBg5, onPressOut: handlePressOutBg5 }, */
             ]}
             renderItem={({ item }) => (
-             <View style={{}}></View>
-            )}
-            keyExtractor={(item) => item.key}
-            ListHeaderComponent={
-            <View></View>
-            }
-            ListFooterComponent={
               <View>
               <View style={styles.scrollContainer}>
               <View style={{flex:1}}>
@@ -318,6 +311,13 @@ const Setting = ({navigation}) => {
               </View>
               </View>
               </View>
+            )}
+            keyExtractor={(item) => item.key}
+            ListHeaderComponent={
+            <View></View>
+            }
+            ListFooterComponent={
+            <View></View>
             }
           />
         </ImageBackground>

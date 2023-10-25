@@ -4,6 +4,7 @@ import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
 import android.view.WindowManager;
+import org.devio.rn.splashscreen.SplashScreen;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,6 +16,7 @@ public class MainActivity extends ReactActivity {
    */
   @Override
     protected void onCreate(Bundle savedInstanceState) {
+      SplashScreen.show(this);
        super.onCreate(savedInstanceState);
       // 상태 바(상단 바)를 숨깁니다.
       getWindow().setFlags(
@@ -24,17 +26,34 @@ public class MainActivity extends ReactActivity {
     int uiOptions = getWindow().getDecorView().getSystemUiVisibility();
             int newUiOptions = uiOptions;
             boolean isImmersiveModeEnabled = ((uiOptions | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY) == uiOptions);
-            if (isImmersiveModeEnabled) {
-                Log.i("Is on?", "Turning immersive mode mode off. ");
-            } else {
-                Log.i("Is on?", "Turning immersive mode mode on.");
-            }
             newUiOptions ^= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
             newUiOptions ^= View.SYSTEM_UI_FLAG_FULLSCREEN;
             newUiOptions ^= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
             getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
+           /*  newUiOptions &= ~View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+            newUiOptions |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+            newUiOptions |= View.SYSTEM_UI_FLAG_FULLSCREEN;
+            newUiOptions |= View.SYSTEM_UI_FLAG_IMMERSIVE;
+
+            getWindow().getDecorView().setSystemUiVisibility(newUiOptions); */
     }
-    
+  
+/*   @Override 
+  protected void onResume() {
+    super.onResume();
+    int uiOptions = getWindow().getDecorView().getSystemUiVisibility();
+    int newUiOptions = uiOptions;
+    boolean isImmersiveModeEnabled = ((uiOptions | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY) == uiOptions);
+    if(isImmersiveModeEnabled){
+      Log.i("Is on?","Turning immersive mode off");
+    } else {
+      Log.i("Is on?","Turning immersive mode on");
+    }
+     newUiOptions ^= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+    newUiOptions ^= View.SYSTEM_UI_FLAG_FULLSCREEN;
+    newUiOptions ^= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+    getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
+  } */
   @Override
   protected String getMainComponentName() {
     return "TECU_ENGINE";

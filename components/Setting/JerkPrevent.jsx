@@ -1,4 +1,4 @@
-import React, {useState, /* useRef, useEffect, useCallback */} from 'react';
+import React, {useState, useEffect, useCallback, /* useRef, useEffect, useCallback */} from 'react';
 import {
   StyleSheet,
   Text,
@@ -9,46 +9,171 @@ import {
   TouchableOpacity,
   //Animated,
   SafeAreaView,
+  LogBox,
   //Button,
   //ScrollView,
   //TouchableWithoutFeedback,
   //FlatList
 } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
-import {VictoryLine, VictoryChart, VictoryTheme} from 'victory-native';
-
+import {VictoryLine, VictoryChart, VictoryTheme, VictoryAxis} from 'victory-native';
+import SaveModal from './SaveModal';
+import {initializeApp,firebase} from '@react-native-firebase/app';
+import {collection, addDoc , getDocs, serverTimestamp,deleteDoc,doc, getFirestore, query, updateDoc} from "@react-native-firebase/firestore";
+if(!firebase.apps.length){
+  initializeApp();
+}
+const db = getFirestore();
 const JerkPrevent = () =>{
     const [open, setOpen] = useState(false);
+    const [saveModal, setSaveModal] = useState(false);
     const [value, setValue] = useState('');
+    const [profile,setProfile] = useState([]);
+    const [list,setList] = useState([]);
+    const [currentId,setCurrentId] = useState();
     const [graph,setGraph] = useState(false);
-    const [start,setStart] = useState(0);
-    const [end,setEnd] = useState(0);
-    const [time,setTime] = useState(300);
-    const [items, setItems] = useState([
-        {label: 'FWD3', value: 'item1',selected:true},
-        {label: 'aaa', value: 'aaa'},
-        {label: 'bbb', value: 'bbb'}
-        ]);
-
+    const [items, setItems] = useState([]);
+    
+    const handleProfile = useCallback(async()=>{
+        const getProfileRef = query(collection(db,'profiles'));
+        const listSnap = await getDocs(getProfileRef);
+        const data = listSnap.docs.map(doc=>({
+          id:doc.id,
+          value:doc.data(),
+        }));
+        
+        const updatedItems = data.map((item) => ({
+          label : item.id,
+          value : item.id,
+          id : item.value,
+        }))
+        setItems(updatedItems);
+        listSnap.forEach(async(doc) => {
+          const parentDocId = doc.id;
+          const subCollectionRef = collection(db, 'profiles', parentDocId, 'ID1'); // 하위 컬렉션에 대한 참조
+          // subCollectionRef를 사용하여 하위 컬렉션 내의 문서 ID를 조회하거나 다른 작업을 수행할 수 있습니다.
+          // 예를 들어, 하위 컬렉션 내의 문서 ID를 가져오려면 다음과 같이 할 수 있습니다.
+          const subCollectionSnap = await getDocs(subCollectionRef);
+          subCollectionSnap.forEach((subDoc) => {
+            const subDocId = subDoc.id;
+            console.log(`하위 컬렉션 ${parentDocId} 내의 문서 ID: ${subDocId}`);
+          });
+        })
+    },[])
+    console.log(value);
+    const parentCollection = 'profiles';
+    const parentDocId = "profile1";
+    const subCollection = "ID1";
+    const newData = {
+      End:profile.End,
+      Start:profile.Start,
+      Time:profile.Time,
+    }
+    const updateProfile = useCallback(async() => {
+      /* const parentDocRef = doc(db, parentCollection, parentDocId);
+      const subCollectionRef = doc(parentDocRef,subCollection);
+      const querySnapShot = await getDocs(subCollectionRef);
+      querySnapShot.forEach(async(subDoc) => {
+        const subDocRef = doc(subCollectionRef, subDoc.id);
+        try{
+          await updateDoc(subDocRef,newData);
+          console.log(`하위 문서 ${subDoc.id}가 업데이트 되었습니다.`);
+        }
+        catch(error){
+          console.error(error);
+        }
+      }) */
+      profile.forEach(async(item,index) => {
+        const userRef = doc(db, 'profiles', value, value, item.id);
+        try {
+          await updateDoc(userRef, {
+            End: profile[index].End,
+            Start: profile[index].Start,
+            Time: profile[index].Time,
+          });
+          console.log('문서가 업데이트되었습니다.');
+        } catch (error) {
+          console.error('문서 업데이트 오류:', error);
+        }
+      })
+     
+    },[profile])
+    const getProfiles = useCallback(async() => {
+      try{
+      const profileRef = query(collection(db,`profiles/${value}/${value}`));
+      const profileSnap = await getDocs(profileRef);
+      const data  = profileSnap.docs.map(doc => ({
+        id: doc.id,
+        num: doc.data().num,
+        Start: doc.data().Start,
+        End: doc.data().End,
+        Time: doc.data().Time,
+      }));
+      console.log(data);
+      setCurrentId(profileSnap.docs.map(doc=>({id:doc.id})));
+      setProfile(data);
+      }
+      catch(e){
+        console.log(e);
+      }
+    },[db,value])
+    useEffect(()=>{
+      handleProfile();
+    },[getProfiles])
+    const closeModal = () => {
+        setSaveModal(false);
+    }
     const handleChangeGraph = (e)=> {
         setGraph(!graph);
     }
-    const onPlusStart = () => {
-        const num = start;
-        setStart(num+1);
-    }
-    const onMinusStart = () => {
-        const num = start;
-        setStart(num-1);
-    }
-    const onPlusEnd = () => {
-        const num = end;
-        setEnd(num+1);
-    }
-    const onMinusEnd = () => {
-        const num = end;
-        setEnd(num-1);
-    }
+    const onPlusStart = (itemId) => {
+        setProfile((prevItems) =>
+          prevItems.map((item) =>
+            item.id === itemId ? { ...item, Start: item.Start + 1 } : item
+          )
+        );
+      };
+      
+      const onMinusStart = (itemId) => {
+        setProfile((prevItems) =>
+          prevItems.map((item) =>
+            item.id === itemId ? { ...item, Start: item.Start - 1 } : item
+          )
+        );
+      };
+      
+      const onPlusEnd = (itemId) => {
+        setProfile((prevItems) =>
+          prevItems.map((item) =>
+            item.id === itemId ? { ...item, End: item.End + 1 } : item
+          )
+        );
+      };
+      
+      const onMinusEnd = (itemId) => {
+        setProfile((prevItems) =>
+          prevItems.map((item) =>
+            item.id === itemId ? { ...item, End: item.End - 1 } : item
+          )
+        );
+      };
+      const onTimePlus = (itemId) => {
+        setProfile((prevItems) =>
+        prevItems.map((item) =>
+          item.id === itemId ? { ...item, Time: item.Time + 1 } : item
+        )
+      );
+      }
+      const onTimeMinus = (itemId) => {
+        setProfile((prevItems) =>
+        prevItems.map((item) =>
+          item.id === itemId ? { ...item, Time: item.Time - 1 } : item
+        )
+      );
+      }
+      useEffect(()=>{
+        LogBox.ignoreLogs(['Require cycle'])
+      },[])
     return(
         <View style={{flex:1,height:1200}}>
             <View style={{flex:1, top:40, borderWidth:1,borderColor:"transparent"}}>
@@ -77,7 +202,7 @@ const JerkPrevent = () =>{
                 backgroundColor: "#dfdfdf",width:160,left:220,top:80,
                 }}/>
                 <TouchableOpacity
-                style={{width:200,left:340,bottom:3}}>
+                style={{width:200,left:340,bottom:3}} onPress={getProfiles}>
                 <View style={{justifyContent:'center',alignItems:'center'}}>
                 <ImageBackground source={require('../../assets/images/engine/basic_btn.png')} style={{width:120,height:45}}>
                 <Text style={textStyle.load}>불러오기</Text>
@@ -87,9 +212,9 @@ const JerkPrevent = () =>{
                 {/* 프로파일 */}
                 <View style={{flex:1,flexDirection:'row',position:'absolute',left:420,}}>
                 <TouchableOpacity
-                style={{left:130,flex:1,borderColor:'transparent',width:200,position:'absolute',top:30}}>                
+                style={{left:130,flex:1,borderColor:'transparent',width:200,position:'absolute',top:30}} onPress={updateProfile}>                
                 <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
-                <ImageBackground source={require('../../assets/images/engine/basic_btn.png')} style={{width:200,height:60}} resizeMode='stretch' imageStyle={{borderRadius:10}}>
+                <ImageBackground source={require('../../assets/images/engine/basic_btn.png')} style={{width:200,height:60}} resizeMode='stretch' imageStyle={{borderRadius:50,borderWidth:10,}}>
                 <Text style={textStyle.save}>프로파일 저장</Text>
                 </ImageBackground>
                 </View>   
@@ -104,22 +229,23 @@ const JerkPrevent = () =>{
                 </View>   
                 </TouchableOpacity>
                 </View>
+                {saveModal&& <SaveModal visible={saveModal} close={closeModal}/>}
                 {/* 프로파일 */}
                 {graph===true?
                 <>
                 <View>
                 <ImageBackground source={require('../../assets/images/engine/Rectangle.png')} style={{width:860,height:380,left:45,top:20,position:'relative'}} imageStyle={{borderRadius:10}}>
-                    <VictoryChart width={900}height={400}>
+                    <VictoryChart width={880} height={400} domainPadding={{ x: 10 , y:10 }} padding={55}>
                         <VictoryLine  
                          style={{
-                            data: { stroke: "#c43a31",strokeWidth:5, },
+                            data: { stroke: "#FF1717",strokeWidth:5, },
                             parent: { border: "1px solid #ccc"},
                             labels: {
                                 fontSize: 15,
                                 fill: ({ datum }) => datum.x === 3 ? "#000000" : "#c43a31"
                               }
                           }}
-                        animate={{onLoad:{duration:1000}}}
+                        animate={{duration:1000,onLoad:{duration:500}}}
                         data={[
                         { x: 0.1, y: 200 },
                         { x: 0.2, y: 250 },
@@ -144,14 +270,14 @@ const JerkPrevent = () =>{
                         ]}/>
                         <VictoryLine  
                          style={{
-                            data: { stroke: "#313f4f",strokeWidth:5, },
+                            data: { stroke: "#28DBF3",strokeWidth:5, },
                             parent: { border: "1px solid #ccc"},
                             labels: {
                                 fontSize: 15,
                                 fill: ({ datum }) => datum.x === 3 ? "#000000" : "#313f4f"
                               }
                           }}
-                        animate={{onLoad:{duration:1000}}}
+                          animate={{duration:1000,onLoad:{duration:500}}}
                         data={[
                         { x: 0.1, y: 500 },
                         { x: 0.2, y: 600 },
@@ -176,14 +302,15 @@ const JerkPrevent = () =>{
                         ]}/>
                         <VictoryLine  
                          style={{
-                            data: { stroke: "#549f72",strokeWidth:5, },
+                            data: { stroke: "#E5FF44",strokeWidth:5, },
                             parent: { border: "1px solid #ccc"},
                             labels: {
-                                fontSize: 15,
+                                fontSize: 12,
                                 fill: ({ datum }) => datum.x === 3 ? "#000000" : "#313f4f"
                               }
                           }}
-                        animate={{onLoad:{duration:1000}}}
+                          animate={{duration:1000,onLoad:{duration:500}}}
+                          
                         data={[
                         { x: 0.1, y: 1100 },
                         { x: 0.2, y: 300 },
@@ -206,8 +333,26 @@ const JerkPrevent = () =>{
                         { x: 1.9, y: 700 },
                         { x: 2.0, y: 1000 },
                         ]}/>
+                         <VictoryAxis label="Current(mA)"
+            dependentAxis offsetX={70}
+            crossAxis={true}
+            style={{axis:{stroke:'transparent',axisLabel:{fontSzie:20,fill:'#848792'}
+            },
+            ticks:{stroke:'transparent',size:5,},tickLabels:{fontSize:15,padding:15,fill:'#848792'},
+            grid: { stroke: "#848792", strokeDasharray: "1", strokeWidth: 1 ,opacity:"1"},
+            axisLabel:{fontSize: 15,padding:50,fill:'#848792'}
+            }}
+            standalone={true}
+            />
+            <VictoryAxis label="Time(sec)"
+            offsetY={70}
+            style={{axis:{stroke:'transparent',axisLabel:{fontSzie:15,fill:'#848792'}},
+            ticks:{stroke:'transparent',size:5,},tickLabels:{fontSize:15,padding:5,fill:'#848792'},
+            grid: { stroke: "#848792", strokeDasharray: "1", strokeWidth: 1 ,opacity:"1"},    
+            axisLabel:{fontSize: 15,fill:'#848792',padding:30,} 
+            }} domain={{x:[0.1,2]}} tickValues={[0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9,2.0]}
+            />
                     </VictoryChart>
-                   {/*  <Graph/> */}
                 </ImageBackground>
                 </View>
                 </>
@@ -236,109 +381,66 @@ const JerkPrevent = () =>{
                     <ImageBackground source={require('../../assets/images/engine/bg_table_off.png')} style={{width:430,height:380,left:45,top:30,position:'relative'}} imageStyle={{borderRadius:10}}>
                         <View style={{flex:1,borderWidth:1,borderColor:'transparent',right:5,padding:0}}>
                         {/* 1행 */}
-                        <View  style={{flex:1,flexDirection:'row',bottom:5,}}>
+                        {profile.map((item,index)=> (
+                        <View  style={{flexDirection:'row',bottom:5,height:35,}} key={item.id}>
                         <ImageBackground source={require('../../assets/images/engine/img_table_num_bg.png')} style={{width:60,height:30,left:15,alignItems:'center',justifyContent:'center',marginTop:10,}} resizeMode='stretch' imageStyle={{borderRadius:5}}>
-                            <Text style={{color:'white',fontSize:14,textAlign:'center'}}>1</Text>
+                            <Text style={{color:'white',fontSize:14,textAlign:'center'}}>{item.num}</Text>
                         </ImageBackground>
                         <ImageBackground source={require('../../assets/images/engine/img_table_box_inner.png')} style={{width:60,height:30,left:20,alignItems:'center',justifyContent:'center',marginTop:10,}} resizeMode='stretch' imageStyle={{borderRadius:5}}>
-                            <Text style={{color:'white',fontWeight:'600',fontSize:14,textAlign:'center'}}>{start}</Text>
+                            <Text style={{color:'white',fontWeight:'600',fontSize:14,textAlign:'center'}}>{item.Start}</Text>
                         </ImageBackground>
                         <TouchableOpacity style={{left:15,top:5,}}
-                        onPress={onPlusStart}
+                        onPress={()=>onPlusStart(item.id)}
                         >
                             <ImageBackground source={require('../../assets/images/engine/basic_btn.png')} style={{width:35,height:40}} resizeMode='stretch'>
                                 <Image source={require('../../assets/images/engine/icon_triangle_down.png')} style={{width:20,height:20,top:10,left:8,transform: [{ rotate: '180 deg' }],}} resizeMode='stretch'/>
                             </ImageBackground>
                         </TouchableOpacity>
                         <TouchableOpacity style={{marginLeft:7,top:5,}}
-                        onPress={onMinusStart}>
+                        onPress={()=>onMinusStart(item.id)}>
                             <ImageBackground source={require('../../assets/images/engine/basic_btn.png')} style={{width:35,height:40}} resizeMode='stretch'>
                                 <Image source={require('../../assets/images/engine/icon_triangle_down.png')} style={{width:20,height:20,top:10,left:7,}} resizeMode='stretch'/>                            
                             </ImageBackground>
                         </TouchableOpacity>
                         <ImageBackground source={require('../../assets/images/engine/img_table_box_inner.png')} style={{width:60,height:30,alignItems:'center',justifyContent:'center',marginTop:10,}} resizeMode='stretch' imageStyle={{borderRadius:5}}>
-                            <Text style={{color:'white',fontWeight:'600',fontSize:14,textAlign:'center'}}>{end}</Text>
+                            <Text style={{color:'white',fontWeight:'600',fontSize:14,textAlign:'center'}}>{item.End}</Text>
                         </ImageBackground>
                         <TouchableOpacity style={{top:5,}}
-                        onPress={onPlusEnd}>
+                        onPress={()=>onPlusEnd(item.id)}>
                             <ImageBackground source={require('../../assets/images/engine/basic_btn.png')} style={{width:35,height:40,right:5,}} resizeMode='stretch'>
                                 <Image source={require('../../assets/images/engine/icon_triangle_down.png')} style={{width:20,height:20,top:10,left:8,transform: [{ rotate: '180 deg' }],}} resizeMode='stretch'/>
                             </ImageBackground>
                         </TouchableOpacity>
                         <TouchableOpacity style={{top:5,}}
-                         onPress={onMinusEnd}>
+                         onPress={()=>onMinusEnd(item.id)}>
                             <ImageBackground source={require('../../assets/images/engine/basic_btn.png')} style={{width:35,height:40,right:12,}} resizeMode='stretch'>
                                 <Image source={require('../../assets/images/engine/icon_triangle_down.png')} style={{width:20,height:20,top:10,left:7,}} resizeMode='stretch'/>                            
                             </ImageBackground>
                         </TouchableOpacity>
                         <ImageBackground source={require('../../assets/images/engine/img_table_box_inner.png')} style={{width:60,height:30,alignItems:'center',justifyContent:'center',marginTop:10,right:14}} resizeMode='stretch' imageStyle={{borderRadius:5}}>
-                            <Text style={{color:'white',fontWeight:'600',fontSize:14,textAlign:'center'}}>{time}</Text>
+                            <Text style={{color:'white',fontWeight:'600',fontSize:14,textAlign:'center'}}>{item.Time}</Text>
                         </ImageBackground>
-                        <TouchableOpacity style={{top:5,}}>
+                        <TouchableOpacity style={{top:5,}}
+                        onPress={()=>onTimePlus(item.id)}>
                             <ImageBackground source={require('../../assets/images/engine/basic_btn.png')} style={{width:35,height:40,right:18,}} resizeMode='stretch'>
                                 <Image source={require('../../assets/images/engine/icon_triangle_down.png')} style={{width:20,height:20,top:10,left:8,transform: [{ rotate: '180 deg' }],}} resizeMode='stretch'/>
                             </ImageBackground>
                         </TouchableOpacity>
-                        <TouchableOpacity style={{top:5,}}>
+                        <TouchableOpacity style={{top:5,}}
+                        onPress={()=>onTimeMinus(item.id)}>
                             <ImageBackground source={require('../../assets/images/engine/basic_btn.png')} style={{width:35,height:40,right:26,}} resizeMode='stretch'>
                                 <Image source={require('../../assets/images/engine/icon_triangle_down.png')} style={{width:20,height:20,top:10,left:7}} resizeMode='stretch'/>                            
                             </ImageBackground>
                         </TouchableOpacity>
-                        
                         </View>
-                    
+                        ))}
                         {/* 마무리 */}
                         </View>                                            
                     </ImageBackground>
                     <ImageBackground source={require('../../assets/images/engine/bg_table_off.png')} style={{width:430,height:380,left:45,top:30,position:'relative',marginLeft:5}} imageStyle={{borderRadius:10}}>
                     <View style={{flex:1,borderWidth:1,borderColor:'transparent',right:5,}}>
-                        {/* 1행 */}
-                        <View  style={{flex:1,flexDirection:'row',bottom:5,}}>
-                        <ImageBackground source={require('../../assets/images/engine/img_table_num_bg.png')} style={{width:60,height:30,left:15,alignItems:'center',justifyContent:'center',marginTop:10,}} resizeMode='stretch' imageStyle={{borderRadius:5}}>
-                            <Text style={{color:'white',fontSize:14,textAlign:'center'}}>11</Text>
-                        </ImageBackground>
-                        <ImageBackground source={require('../../assets/images/engine/img_table_box_inner.png')} style={{width:60,height:30,left:20,alignItems:'center',justifyContent:'center',marginTop:10,}} resizeMode='stretch' imageStyle={{borderRadius:5}}>
-                            <Text style={{color:'white',fontWeight:'600',fontSize:14,textAlign:'center'}}>300</Text>
-                        </ImageBackground>
-                        <TouchableOpacity style={{left:15,top:5,}}>
-                            <ImageBackground source={require('../../assets/images/engine/basic_btn.png')} style={{width:35,height:40}} resizeMode='stretch'>
-                                <Image source={require('../../assets/images/engine/icon_triangle_down.png')} style={{width:20,height:20,top:10,left:8,transform: [{ rotate: '180 deg' }],}} resizeMode='stretch'/>
-                            </ImageBackground>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{marginLeft:7,top:5,}}>
-                            <ImageBackground source={require('../../assets/images/engine/basic_btn.png')} style={{width:35,height:40}} resizeMode='stretch'>
-                                <Image source={require('../../assets/images/engine/icon_triangle_down.png')} style={{width:20,height:20,top:10,left:7}} resizeMode='stretch'/>                            
-                            </ImageBackground>
-                        </TouchableOpacity>
-                        <ImageBackground source={require('../../assets/images/engine/img_table_box_inner.png')} style={{width:60,height:30,alignItems:'center',justifyContent:'center',marginTop:10,}} resizeMode='stretch' imageStyle={{borderRadius:5}}>
-                            <Text style={{color:'white',fontWeight:'600',fontSize:14,textAlign:'center'}}>300</Text>
-                        </ImageBackground>
-                        <TouchableOpacity style={{top:5,}}>
-                            <ImageBackground source={require('../../assets/images/engine/basic_btn.png')} style={{width:35,height:40,right:5,}} resizeMode='stretch'>
-                                <Image source={require('../../assets/images/engine/icon_triangle_down.png')} style={{width:20,height:20,top:10,left:8,transform: [{ rotate: '180 deg' }],}} resizeMode='stretch'/>
-                            </ImageBackground>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{top:5,}}>
-                            <ImageBackground source={require('../../assets/images/engine/basic_btn.png')} style={{width:35,height:40,right:12,}} resizeMode='stretch'>
-                                <Image source={require('../../assets/images/engine/icon_triangle_down.png')} style={{width:20,height:20,top:10,left:7}} resizeMode='stretch'/>                            
-                            </ImageBackground>
-                        </TouchableOpacity>
-                        <ImageBackground source={require('../../assets/images/engine/img_table_box_inner.png')} style={{width:60,height:30,alignItems:'center',justifyContent:'center',marginTop:10,right:14}} resizeMode='stretch' imageStyle={{borderRadius:5}}>
-                            <Text style={{color:'white',fontWeight:'600',fontSize:14,textAlign:'center'}}>300</Text>
-                        </ImageBackground>
-                        <TouchableOpacity style={{top:5,}}>
-                            <ImageBackground source={require('../../assets/images/engine/basic_btn.png')} style={{width:35,height:40,right:18,}} resizeMode='stretch'>
-                                <Image source={require('../../assets/images/engine/icon_triangle_down.png')} style={{width:20,height:20,top:10,left:8,transform: [{ rotate: '180 deg' }],}} resizeMode='stretch'/>
-                            </ImageBackground>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{top:5,}}>
-                            <ImageBackground source={require('../../assets/images/engine/basic_btn.png')} style={{width:35,height:40,right:26,}} resizeMode='stretch'>
-                                <Image source={require('../../assets/images/engine/icon_triangle_down.png')} style={{width:20,height:20,top:10,left:7}} resizeMode='stretch'/>                            
-                            </ImageBackground>
-                        </TouchableOpacity>
-                        
-                        </View>                       
-                        </View>   
+                                       
+                    </View>   
                                   
                     </ImageBackground>
                 </View>

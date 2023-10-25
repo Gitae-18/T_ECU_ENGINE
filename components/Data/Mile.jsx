@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useLayoutEffect, useMemo} from 'react';
+import React, {useState, useEffect, useLayoutEffect, useMemo, useCallback} from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,13 +7,6 @@ import {
   ImageBackground,
   //Pressable,
   TouchableOpacity,
-  //Animated,
-  //SafeAreaView,
-  //Button,
-  //ScrollView,
-  //TouchableWithoutFeedback,
-  //FlatList,
-  //linearGradient,
   LogBox
 } from 'react-native';
 /* import {Defs,LinearGradient,Stop,Svg} from 'react-native-svg'; */
@@ -22,6 +15,7 @@ import DatePicker from 'react-native-date-picker';
 import MileChart from './Charts/MileChart';
 import VehicleInfo from './VehicleInfo';
 import ImageButton from './ImageButton';
+
 const Mile = () =>{
     const [open, setOpen] = useState(false);
     const [open2,setOpen2] = useState(false);
@@ -29,17 +23,25 @@ const Mile = () =>{
     const [today,setToday] = useState(new Date());
     const [year,setYear] = useState('00/00/00');
     const [year2,setYear2] = useState('00/00/00');
-    const [data, setData] = useState(useMemo(()=>generateRandomData(),[]));
-        
-    function generateRandomData() {
-          return Array.from({ length: 30 }, (_, index) => ({
-            x: String(index + 1).padStart(2, '0'),
-            y: Math.floor(Math.random() * 101),
-          }));
-        }    
-    useLayoutEffect(()=>{
-    setData(generateRandomData())
-     },[])
+    const [isLoading, setIsLoading] = useState(false);
+    /* useState(
+      [
+        {x:'01',y:'57'},{x:'02',y:'2'},{x:'03',y:'30'},{x:'04',y:'43'},{x:'04',y:'43'},{x:'05',y:'58'},{x:'06',y:'9'},{x:'07',y:'20'},{x:'08',y:'16'},{x:'09',y:'87'},{x:'10',y:'62'}
+        ,{x:'11',y:'40'},{x:'12',y:'57'},{x:'13',y:'85'},{x:'14',y:'97'},{x:'15',y:'91'},{x:'16',y:'49'},{x:'17',y:'10'},{x:'18',y:'74'},{x:'19',y:'35'},{x:'20',y:'7'}
+        ,{x:'21',y:'50'},{x:'22',y:'58'},{x:'23',y:'97'},{x:'24',y:'67'},{x:'25',y:'6'},{x:'26',y:'47'},{x:'27',y:'20'},{x:'28',y:'86'},{x:'29',y:'79'},{x:'30',y:'64'}
+      ],
+    ) */
+    /* const generateData = () => {
+     
+      setData(preGeneratedData);
+     };
+    useEffect(() => {
+      // 컴포넌트가 마운트될 때 데이터 생성 시작
+      generateData();
+    }, []); */
+    const getData = useCallback(async() => {
+      //year ~ year2까지의 데이터를 받아옴
+    },[])
      useEffect(()=>{
       LogBox.ignoreLogs(['Require cycle'])
     },[])
@@ -67,10 +69,10 @@ return(
         <View style={{flex:1,left:5,}}><Text style={{left:30,top:10,fontSize:45,color:'#ffb800',position: 'absolute',fontWeight:'bold',}}>125</Text><Text style={{fontSize:25,position:'absolute',color:'white',left:110,top:30,fontWeight:'bold'}}>km</Text>
         <Image source={require('../../assets/images/engine/Vector.png')} style={{height:40,left:170,top:20}}resizeMode='stretch'></Image>
         </View>
-        <View style={{flex:1,left:5,}}><Text style={{left:30,top:10,fontSize:45,color:'#ffb800',position: 'absolute',fontWeight:'bold',}}>125</Text><Text style={{fontSize:25,position:'absolute',color:'white',left:110,top:30,fontWeight:'bold'}}>km</Text>
+        <View style={{flex:1,left:5,}}><Text style={{left:30,top:10,fontSize:45,color:'#ffb800',position: 'absolute',fontWeight:'bold',}}>85</Text><Text style={{fontSize:25,position:'absolute',color:'white',left:110,top:30,fontWeight:'bold'}}>km</Text>
         <Image source={require('../../assets/images/engine/Vector.png')} style={{height:40,left:170,top:20}}resizeMode='stretch'></Image>
         </View>
-        <View style={{flex:1,left:5,}}><Text style={{left:30,top:10,fontSize:45,color:'#ffb800',position: 'absolute',fontWeight:'bold',}}>125</Text><Text style={{fontSize:25,position:'absolute',color:'white',left:110,top:30,fontWeight:'bold'}}>km</Text>
+        <View style={{flex:1,left:5,}}><Text style={{left:30,top:10,fontSize:45,color:'#ffb800',position: 'absolute',fontWeight:'bold',}}>50</Text><Text style={{fontSize:25,position:'absolute',color:'white',left:110,top:30,fontWeight:'bold'}}>km</Text>
         </View>
         </View>
     </ImageBackground>
@@ -112,18 +114,24 @@ return(
         <ImageBackground source={require('../../assets/images/engine/Rectangle_106.png')} style={{width:800,height:300,left:70,marginTop:30,position:'relative'}} imageStyle={{borderRadius:10}}>
          <View style={{flex:1,flexDirection:'row'}}>
           <Text  style={textStyle.text4}>
-            Max Mileage  <Text style={textStyle.km}>82</Text><Text style={{fontSize:14}}>kw</Text>
+            Max Mileage  <Text style={textStyle.km}>125</Text><Text style={{fontSize:14}}>kw</Text>
           </Text>  
           <Image source={require('../../assets/images/engine/Vector_82.png')} style={{height:20,left:180,top:16,}} resizeMode='stretch'></Image>
           <Text  style={textStyle.text8}>
-            Max Mileage  <Text style={textStyle.km}>82</Text><Text style={{fontSize:14}}>kw</Text>
+            Average Mileage  <Text style={textStyle.km}>85</Text><Text style={{fontSize:14}}>kw</Text>
           </Text>  
-          <Image source={require('../../assets/images/engine/Vector_82.png')} style={{height:20,left:360,top:16,}} resizeMode='stretch'></Image>
+          <Image source={require('../../assets/images/engine/Vector_82.png')} style={{height:20,left:390,top:16,}} resizeMode='stretch'></Image>
           <Text  style={textStyle.text12}>
-            Max Mileage  <Text style={textStyle.km}>82</Text><Text style={{fontSize:14}}>kw</Text>
+            Min Mileage  <Text style={{ color: '#ffb800',
+            fontWeight: 'bold',
+            position: 'absolute',
+            fontSize: 17,
+            marginLeft:40,}}>50</Text><Text style={{fontSize:14}}>kw</Text>
           </Text>  
           </View>
-          <MileChart data={data}/>
+        <View>
+          <MileChart/>
+        </View>
         </ImageBackground>   
         <View style={{flex:1,width:500,top:60}}>
                       <Image source={require('../../assets/images/engine/img_divider_line.png')} style={{width:950,bottom:0}}></Image>
@@ -183,7 +191,7 @@ const textStyle= StyleSheet.create({
       position: 'absolute',
       fontSize: 18,
       fontWeight:'600',
-      left:20,
+      left:15,
       top:15,
     },
     text8:{
@@ -199,7 +207,7 @@ const textStyle= StyleSheet.create({
       position: 'absolute',
       fontSize: 18,
       fontWeight:'600',
-      left:380,
+      left:410,
       top:15,
     },
     text5:{
@@ -215,7 +223,7 @@ const textStyle= StyleSheet.create({
         fontWeight: 'bold',
         position: 'absolute',
         fontSize: 17,
-        marginLeft:40,
+        marginLeft:30,
       },
     infotext:{
       color:'white',

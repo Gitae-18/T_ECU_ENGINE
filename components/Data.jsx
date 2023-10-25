@@ -79,13 +79,13 @@ const Data = ({navigation}) => {
     return(
       <SafeAreaView style={{ flex: 1, backgroundColor: 'black', flexDirection: 'row' }}>
       <View style={{ flex: 1 }}>
-        <ImageBackground source={require('../assets/images/engine/Homescreen.png')} style={Imgstyle.bg}>
-          <Pressable style={styles.menuButton} onPress={toggleSidebar}>
-          <ImageBackground source={require('../assets/images/engine/defaultbtn.png')} style={styles.default}>
+        <ImageBackground source={require('../assets/images/engine/Homescreen.png')} style={Imgstyle.bg} resizeMode='stretch'>
+          <TouchableOpacity style={styles.menuButton} onPress={toggleSidebar}>
+          <ImageBackground source={require('../assets/images/engine/Rectangle_90.png')} style={styles.default} resizeMode="contain">
                  <Image resizeMode='center' source={require('../assets/images/engine/menu.png')} style={Imgstyle.menu}
                   ></Image>
                  </ImageBackground>
-          </Pressable>
+          </TouchableOpacity>
           {isSidebarVisible && <Sidebar style={{ zIndex: 1000 }} visible={isSidebarVisible} setSidebar={setSidebarVisible} navigation={navigation} />}
           <View style={{zIndex:99,top:70}}>
               <TouchableOpacity

@@ -4,6 +4,9 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.swmansion.gesturehandler.RNGestureHandlerPackage;
+import org.devio.rn.splashscreen.SplashScreenReactPackage;
+import com.RNFetchBlob.RNFetchBlobPackage;
 import com.swmansion.reanimated.ReanimatedPackage;
 import it.innove.BleManagerPackage;
 import com.rnfs.RNFSPackage;
@@ -15,7 +18,6 @@ import com.facebook.soloader.SoLoader;
 import com.tecu_engine.newarchitecture.MainApplicationReactNativeHost;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-
 public class MainApplication extends Application implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost =

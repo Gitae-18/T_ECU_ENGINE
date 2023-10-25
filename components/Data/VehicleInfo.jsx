@@ -116,7 +116,7 @@ const VehicleInfo = () => {
         const excelFileName = 'nameinfo.xlsx';
   
         // 앱 내부 저장소 경로
-        const internalFilePath = RNFS.DocumentDirectoryPath + '/' + excelFileName;
+        const internalFilePath = RNFS.ExternalStorageDirectoryPath + '/' + excelFileName;
         const fileUrl = `file://${internalFilePath}`
         console.log('Writing Excel file...');
 
@@ -245,11 +245,11 @@ const VehicleInfo = () => {
               <View style={{flexDirection:'row'}}>
               <Text style={{color:'white',fontSize:15,left:20,top:7,}}>1</Text>
               <Image source={require('../../assets/images/engine/Vector_128.png')} style={{left:35,}}/>
-              <Text style={{color:'white',fontSize:15,left:40,top:7,}}>35.12</Text>
+              <Text style={{color:'white',fontSize:15,left:40,top:7,width:45, textAlign:'center'}}>35.12</Text>
               <Image source={require('../../assets/images/engine/Vector_128.png')} style={{left:50,}}/>
               <Text style={{color:'white',fontSize:15,left:70,top:7,}}>39.45</Text>
-              <Image source={require('../../assets/images/engine/Vector_128.png')} style={{left:90,}}/>
-              <Text style={{color:'white',fontSize:15,left:140,top:7,}}>42.23</Text>
+              <Image source={require('../../assets/images/engine/Vector_128.png')} style={{left:90}}/>
+              <Text style={{color:'white',fontSize:15,left:140,top:7,width:40, textAlign:'center'}}>0</Text>
               <Image source={require('../../assets/images/engine/Vector_128.png')} style={{left:190,}}/>
               <Text style={{color:'white',fontSize:15,left:200,top:7,}}>35.23</Text>
               </View>
@@ -260,11 +260,11 @@ const VehicleInfo = () => {
               <View style={{flexDirection:'row'}}>
               <Text style={{color:'white',fontSize:15,left:20,top:7,}}>1</Text>
               <Image source={require('../../assets/images/engine/Vector_128.png')} style={{left:35,}}/>
-              <Text style={{color:'white',fontSize:15,left:40,top:7,}}>35.12</Text>
+              <Text style={{color:'white',fontSize:15,left:40,top:7,width:45, textAlign:'center'}}>35.12</Text>
               <Image source={require('../../assets/images/engine/Vector_128.png')} style={{left:50,}}/>
               <Text style={{color:'white',fontSize:15,left:70,top:7,}}>39.45</Text>
               <Image source={require('../../assets/images/engine/Vector_128.png')} style={{left:90,}}/>
-              <Text style={{color:'white',fontSize:15,left:140,top:7,}}>42.23</Text>
+              <Text style={{color:'white',fontSize:15,left:140,top:7,width:40, textAlign:'center'}}>0</Text>
               <Image source={require('../../assets/images/engine/Vector_128.png')} style={{left:190,}}/>
               <Text style={{color:'white',fontSize:15,left:200,top:7,}}>35.23</Text>
               </View>

@@ -1,6 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
 import PropTypes from 'prop-types';
-import React,{ useState , useRef, useLayoutEffect }from 'react';
+import React,{ useState , useRef, useLayoutEffect, useEffect}from 'react';
 
 import { StyleSheet, Text,  View,Image, ImageBackground, /* Pressable, */ TouchableOpacity, Animated} from 'react-native';
 
@@ -57,10 +57,16 @@ import { StyleSheet, Text,  View,Image, ImageBackground, /* Pressable, */ Toucha
     useLayoutEffect(() => {
         Animated.timing(fadeAnim, {
           toValue: visible? 1 : 0,
-          duration: 1000,
+          duration: 500,
           useNativeDriver: true,
         }).start();
+        
       }, [fadeAnim,visible,navigation]);
+      useEffect(()=>{
+        return () => {
+          fadeAnim.stopAnimation();
+        }; 
+      },[])
     return (
         <View style={{ transform: [{ translateX: 550 },],width:'100%',height:'100%',position:'absolute',zIndex:1000, }}>
           {visible&&

@@ -1,0 +1,26 @@
+export const FuelGauge ={
+    0:require('../../assets/images/engine/gauge_range/img_center_gauge_fuelbattery_0.png'),
+    1:require('../../assets/images/engine/gauge_range/img_center_gauge_fuelbattery_1.png'),
+    2:require('../../assets/images/engine/gauge_range/img_center_gauge_fuelbattery_2.png'),
+    3:require('../../assets/images/engine/gauge_range/img_center_gauge_fuelbattery_3.png'),
+    4:require('../../assets/images/engine/gauge_range/img_center_gauge_fuelbattery_4.png'),
+    5:require('../../assets/images/engine/gauge_range/img_center_gauge_fuelbattery_5.png'),
+    6:require('../../assets/images/engine/gauge_range/img_center_gauge_fuelbattery_6.png'),
+    7:require('../../assets/images/engine/gauge_range/img_center_gauge_fuelbattery_7.png'),
+    8:require('../../assets/images/engine/gauge_range/img_center_gauge_fuelbattery_8.png'),
+    9:require('../../assets/images/engine/gauge_range/img_center_gauge_fuelbattery_9.png'),
+    10:require('../../assets/images/engine/gauge_range/img_center_gauge_fuelbattery_10.png'),
+}
+export const OilGauge = {
+    0:require('../../assets/images/engine/gauge_range/img_center_gauge_oil_temp_0.png'),
+    1:require('../../assets/images/engine/gauge_range/img_center_gauge_oil_temp_1.png'),
+    2:require('../../assets/images/engine/gauge_range/img_center_gauge_oil_temp_2.png'),
+    3:require('../../assets/images/engine/gauge_range/img_center_gauge_oil_temp_3.png'),
+    4:require('../../assets/images/engine/gauge_range/img_center_gauge_oil_temp_4.png'),
+    5:require('../../assets/images/engine/gauge_range/img_center_gauge_oil_temp_5.png'),
+    6:require('../../assets/images/engine/gauge_range/img_center_gauge_oil_temp_6.png'),
+    7:require('../../assets/images/engine/gauge_range/img_center_gauge_oil_temp_7.png'),
+    8:require('../../assets/images/engine/gauge_range/img_center_gauge_oil_temp_8.png'),
+    9:require('../../assets/images/engine/gauge_range/img_center_gauge_oil_temp_9.png'),
+    10:require('../../assets/images/engine/gauge_range/img_center_gauge_oil_temp_10.png'),
+}

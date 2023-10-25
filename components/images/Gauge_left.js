@@ -1,4 +1,5 @@
 export const Gauge_left ={
+    'null':require('../../assets/images/engine/gauge/img_gauge_bg_left.png'),
     0:require('../../assets/images/engine/gauge/img_gauge_bg_left_0.png'),
     1:require('../../assets/images/engine/gauge/img_gauge_bg_left_1.png'),
     2:require('../../assets/images/engine/gauge/img_gauge_bg_left_2.png'),

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "2728554201",
+    "project_id": "t-ecu-c75bd",
+    "storage_bucket": "t-ecu-c75bd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:2728554201:android:bb2c6479692a04df9098c8",
+        "android_client_info": {
+          "package_name": "com.tecu_engine"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4xKzzWEkIv-63h9UQctsUwtRlJ2he5DM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
