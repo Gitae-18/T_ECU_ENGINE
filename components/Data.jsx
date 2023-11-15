@@ -93,12 +93,12 @@ const Data = ({navigation}) => {
                    onPressOut={handlePressOutBg1}
                    activeOpacity={0.8}
                    style={{ position: 'absolute',
-                   width:220,height:35,
+                   width:300,height:35,
                    borderWidth: 1,
                    borderColor: 'transparent', 
                    borderRadius: 10,
-                   top:15,
-                   left:70,
+                   top:45,
+                   left:90,
                    zindex:50,
                  }}
                  >  
@@ -108,12 +108,12 @@ const Data = ({navigation}) => {
                    onPressOut={handlePressOutBg2}
                    activeOpacity={0.8}
                    style={{ position: 'absolute' ,
-                   width:220,height:35,
+                   width:300,height:35,
                    borderWidth: 1,
                    borderColor: 'transparent', 
                    borderRadius: 10,
-                   left:370,
-                   top:15,
+                   left:480,
+                   top:45,
                    zindex:50,
                  }}
                  ></TouchableOpacity>
@@ -123,12 +123,12 @@ const Data = ({navigation}) => {
                    activeOpacity={0.8}
                    style={{ 
                    position: 'absolute',
-                   width:220,height:35,
+                   width:300,height:35,
                    borderWidth: 1,
                    borderColor: 'transparent', 
                    borderRadius: 10,
-                   top:15,
-                   left:670,
+                   top:45,
+                   left:870,
                    zindex:50,
                  }}
                  ></TouchableOpacity>
@@ -137,8 +137,8 @@ const Data = ({navigation}) => {
             style={{ flex: 1, width: 1200, paddingVertical: 10, top: 45 }}
             data={[
               { key: 'tab1', text: 'T-ECU', left: 70, onPressIn: handlePressInBg1, onPressOut: handlePressOutBg1 },
-              { key: 'tab2', text: '#2', left: 370, onPressIn: handlePressInBg2, onPressOut: handlePressOutBg2 },
-              { key: 'tab3', text: '#3', left: 670, onPressIn: handlePressInBg3, onPressOut: handlePressOutBg3 },
+              //{ key: 'tab2', text: '#2', left: 370, onPressIn: handlePressInBg2, onPressOut: handlePressOutBg2 },
+              //{ key: 'tab3', text: '#3', left: 670, onPressIn: handlePressInBg3, onPressOut: handlePressOutBg3 },
             ]}
             renderItem={({ item }) => (
              <View style={{}}></View>
@@ -154,8 +154,8 @@ const Data = ({navigation}) => {
               <ImageBackground
                 source={require('../assets/images/engine/bg_tab_3_1.png')}
                 style={{flex: 1,
-                  width: 950,
-                  height:480,
+                  width: 1250,
+                  height: 680,
                   left: 5,
                   top:25,
                   zIndex:zIndex1,}}
@@ -173,8 +173,8 @@ const Data = ({navigation}) => {
                 <ImageBackground
                 source={require('../assets/images/engine/bg_tab_3_2.png')}
                 style={{ flex: 1,
-                  width: 950,
-                  height: 480,
+                  width: 1250,
+                  height: 680,
                   left: 5,
                   top: 25,
                   zIndex:zIndex2}}
@@ -190,8 +190,8 @@ const Data = ({navigation}) => {
               <ImageBackground
                 source={require('../assets/images/engine/bg_tab_3_3.png')}
                 style={{  flex: 1,
-                  width: 950,
-                  height: 480,
+                  width: 1250,
+                  height: 680,
                   left: 5,
                   top: 25,
                 zIndex:zIndex3}}
@@ -226,48 +226,48 @@ const TextStyle = {
     fontWeight: 'bold',
     position: 'absolute',
     fontSize: 20,
-    left: 140,
-    top: 8,
+    left: 210,
+    top: 40,
   },
   txt1orange: {
     color: 'orange',
     fontWeight: 'bold',
     position: 'absolute',
     fontSize: 20,
-    left: 140,
-    top: 8,
+    left: 210,
+    top: 40,
   },
   txt2: {
     color: 'white',
     fontWeight: 'bold',
     position: 'absolute',
     fontSize: 20,
-    left: 460,
-    top: 8,
+    left: 600,
+    top: 40,
   },
   txt2orange: {
     color: 'orange',
     fontWeight: 'bold',
     position: 'absolute',
     fontSize: 20,
-    left: 460,
-    top: 8,
+    left: 600,
+    top: 40,
   },
   txt3: {
     color: 'white',
     fontWeight: 'bold',
     position: 'absolute',
     fontSize: 20,
-    right: 165,
-    top: 8,
+    right: 210,
+    top: 40,
   },
   txt3orange: {
     color: 'orange',
     fontWeight: 'bold',
     position: 'absolute',
     fontSize: 20,
-    right: 165,
-    top: 8,
+    right: 210,
+    top: 40,
   },
 };
 const styles = {

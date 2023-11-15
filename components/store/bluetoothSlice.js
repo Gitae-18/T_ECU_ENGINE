@@ -9,7 +9,7 @@ const bluetoothSlice = createSlice({
         gear:'N',
         rpm: 0,
         mode:'manual',
-        peripheral:'',
+        peripheral:{},
     },
     reducers: {
         setBluetoothData: (state, action) => {

@@ -9,6 +9,7 @@ import BleManager, {
   BleScanMode,
   BleDisconnectPeripheralEvent,
 } from 'react-native-ble-manager';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import { setBluetoothData, setFuelData, setCoolantData, setGearData, setRpmData } from './store/bluetoothSlice';
 import Sidebar from './Sidebar';
 import PropTypes from 'prop-types';
@@ -16,7 +17,9 @@ import MainButton from './MainButton';
 import BlueToothModal from './BlueToothModal';
 import { Gauge_left } from './images/Gauge_left';
 import { Gauge_right } from './images/Guage_right';
+import { selectGauge } from './store/GaugeSlice';
 import { Gear } from './images/Gear';
+import { Mode } from './images/Mode';
 import { FuelGauge, OilGauge } from './images/Center_guage';
 import Animated,{ withTiming, useSharedValue, useAnimatedStyle, withDelay, Easing, useDerivedValue, withSequence,} from 'react-native-reanimated';
 import {CrossfadeImage} from 'react-native-crossfade-image';
@@ -38,20 +41,21 @@ const serviceID = 'ffe0';
 const lengthCharacteristic = 'ffe1';
 BleManagerModule.Peripheral = {};
 
-  const Home = ({navigation}) =>{
+  const Home = ({navigation,name}) =>{
     const [isModalVisible,setModalVisible] = useState(false);
     const [isSidebarVisible, setSidebarVisible] = useState(false);
     const [timer,setTimer] = useState('00:00:00');
     const [year,setYear] = useState('00/00/00');
     const [day,setDay] = useState('');
     const [imageSource, setImageSource] = useState(true);
+    const [appStart, setAppStart] = useState(true);
     const [sidebarClick, setSidebarClick] = useState(false);
     const runtimeRef = useRef(0);
-    const modeRef = useRef();
     const [currentImage, setCurrentImage] = useState(Gauge_left[0]);
     const week = ['일','월','화','수','목','금','토'];
     const [degree, setDegree] = useState(0);
     const [distance, setDistance] = useState(100);
+    const navi = useNavigation();
     //const fuel =/*  useSelector(selectFuelData); */ 10
     //const coolant =/*  useSelector(selectCoolantData); */ 10
     const [increasing, setIncreasing] = useState(true);
@@ -65,38 +69,28 @@ BleManagerModule.Peripheral = {};
      "serviceUUIDs": ["ffe0"], "txPowerLevel": -2147483648}, "id": "98:DA:60:02:B0:AF", "name": "T03", "rssi": -48}
     //console.log(peripheral);
     const [data, setData] = useState('');
-    /* const [bluetoothDataLocal, setBluetoothDataLocal] = useState(0);
-    const [rpmData, setRpmDataLocal] = useState(0);
-    const [coolantData, setCoolantDataLocal] = useState(0);
-    const [fuelData, setFuelDataLocal] = useState(0);
-    const [gearData, setGearDataLocal] = useState('N'); */
     const [isConnected, setIsConnected] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [waiting, setWaiting] = useState(null);
-/*     const bluetoothData = useSelector(selectBluetoothData);
-    const bluetoothData1 = useSelector(selectFuelData);
-    const bluetoothData2 = useSelector(selectRpmData);
-    const bluetoothData3 = useSelector(selectGearData);
-    const bluetoothData4 = useSelector(selectCoolantData); */
     const [speed, setSpeed] = useState(/* useSelector(selectBluetoothData) */0);
-    const [right, setRight] = useState(/* useSelector(selectRpmData) */0);
-    const [currentRight, setCurrentRight] = useState(right);
-    const [gearStat, setGearStat] = useState(/* useSelector(selectGearData) */'N');
-    const [fuel, setFuel] = useState(/* useSelector(selectFuelData) */0);
-    const [coolant, setCoolant] = useState(/* useSelector(selectCoolantData) */0);
+    const [engine, setEngine] = useState(/* useSelector(selectRpmData) */0);
+    const [gearStat, setGearStat] = useState(/* useSelector(selectGearData) */'');
+    const [fuel, setFuel] = useState(/* useSelector(selectFuelData) */7);
+    const [coolant, setCoolant] = useState(/* useSelector(selectCoolantData) */6);
     const [currentSpeed, setCurrentSpeed] = useState(speed);
-    //const [speed, setSpeed] = useState(10);
+    const [currentFuel, setCurrentFuel] = useState(fuel);
+    const [currentCoolant, setCurrentCoolant] = useState(coolant);
+    const [currentEngine, setCurrentEngine] = useState(engine);
+    const [parking, setParking] = useState();
+    const [emergency, setEmergency] = useState();
+    const [gearMode, setGearMode] = useState(1);
     const [modal, setModal] = useState(false);
     const [up, setUp] = useState(true);
-    //const [gearStat, setGearStat] = useState(useSelector(selectGearData));
-
     const distanceRef = useRef(distance); // distance 상태 변수를 useRef로 변경
     const metersPerUpdate = 10; // 10m마다 업데이트
     //const gearStatValues = ['r3','r2','r1','n','f1','f2','f3'];
     let currentIndex = 0;
-    const scale = useSharedValue(1);
-    //const progress = withTiming(currentSpeed, { duration: 200, easing: Easing.inOut(Easing.ease) });
-    //const num = 24;
+
     const currentDate = () =>{
       const date = new Date();
       const year = date.getFullYear();
@@ -134,53 +128,7 @@ BleManagerModule.Peripheral = {};
     }
     const addOrUpdatePeripheral = (id, updatedPeripheral) => {
       setPeripherals(map => new Map(map.set(id, updatedPeripheral)));
-    };
-    
-
-
-    const updatedAlarmData = useCallback(async() =>{
-      const updatedData = {
-        seat: true,
-        backlight: true,
-        battery: true,
-        oil_emergency: false,
-        emergency: true,
-        parking: false,
-        oil_temp: true,
-        oil_pressure: true,
-        coolant_temp: true,
-      }
-      dispatch(setAlarmData(updatedData));
-    },[dispatch])
-    const startScan = () => {
-      
-      if (!isScanning) {
-        setPeripherals(new Map());
-  
-        try {
-          console.debug('[startScan] starting scan...');
-          setIsScanning(true);
-          BleManager.scan(SERVICE_UUIDS, 10, false, {
-            matchMode: BleScanMatchMode.Sticky,
-            scanMode: BleScanMode.LowLatency,
-            callbackType: BleScanCallbackType.AllMatches,
-          })
-            .then(() => {
-              console.debug('[startScan] scan promise returned successfully.');
-              setTimeout(() => {
-                handleStopScan();
-              }, 1000);
-            })
-            .catch(err => {
-              console.error('[startScan] ble scan returned in error', err);
-            });
-        } catch (error) {
-          console.error('[startScan] ble scan error thrown', error);
-        }
-      }
-    };
-  
-   
+    };    
     const handleStopScan = () => {
       if(isScanning){
       setIsScanning(false);
@@ -190,15 +138,6 @@ BleManagerModule.Peripheral = {};
       return ;        
     };
   
-    const handleDisconnectedPeripheral = event => {
-      BleManager.disconnect(peripheral.id)
-      .then(()=>{
-        console.log("Disconnected");
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-    };  
      /*  const writeData = (peripheral) => {
         console.log('writeData 함수가 호출되었습니다');
         BleManager.write(peripheral.id , serviceID,lengthCharacteristic,buffer.toJSON().data,15)
@@ -369,11 +308,11 @@ BleManagerModule.Peripheral = {};
           const gearval = data[4] + data[5];
           const fuelval = data[6] + data[7];
           const coolantval = data[8] + data[9];
-          setSpeed(parseInt(speedval));
-          setRight(parseInt(rpmval));
+         /*  setSpeed(parseInt(speedval));
+          setEngine(parseInt(rpmval));
           setGearStat(gearval);
           setFuel(parseInt(fuelval));
-          setCoolant(parseInt(coolantval));
+          setCoolant(parseInt(coolantval)); */
           console.log(data);
         }
       ) 
@@ -389,15 +328,63 @@ BleManagerModule.Peripheral = {};
         }
       };
     
-    }, [isConnected]);
+    }, [isConnected,navigation]);
+    const gearSequence = ['n', 'f1', 'f2', 'f3', 'n', 'r1', 'r2'];
 
+    useEffect(() => {
+      let currentIndex = 0;
+      
+      const interval = setInterval(() => {
+        setGearStat(gearSequence[currentIndex]);
+  
+        currentIndex++;
+  
+        if (currentIndex >= gearSequence.length) {
+          // 모든 상태를 확인한 후 초기화
+          currentIndex = 0;
+        }
+      }, 3000);
+  
+      // 컴포넌트가 언마운트될 때 clearInterval을 호출하여 메모리 누수 방지
+      return () => clearInterval(interval);
+    }, []);
+    useEffect(()=> {
+      const duration = 3000; // 변경되는 총 시간 (3초)
+      const gearSpeedMap = {
+        'n': 0,
+        'f1': 5,
+        'f2': 10,
+        'f3': 20,
+        'r1': 5,
+        'r2': 10,
+      };
+      const targetSpeed = gearSpeedMap[gearStat];
+
+      if (targetSpeed !== undefined) {
+        const startTime = Date.now();
+        const duration = 1000; // 변경되는 총 시간 (3초)
+    
+        const updateSpeed = () => {
+          const currentTime = Date.now();
+          const elapsedTime = currentTime - startTime;
+          const progress = Math.min(1, elapsedTime / duration);
+          const newSpeed = gearSpeedMap[gearStat] * progress;
+          setSpeed(newSpeed);
+          setEngine(Math.round(newSpeed*1.75));
+          if (progress < 1) {
+            requestAnimationFrame(updateSpeed);
+          }
+        };
+    
+        updateSpeed();
+      }
+    },[gearStat,navigation])
     useLayoutEffect(() => {
       let animationFrameId;
-    
       const updateDegree = () => {
         const currentDegree = degree;
         let targetDegree = 0;
-    
+
         switch (gearStat) {
           case 'r3':
             targetDegree = -75;
@@ -445,7 +432,7 @@ BleManagerModule.Peripheral = {};
           cancelAnimationFrame(animationFrameId);
         }
       };
-    }, [gearStat]);
+    }, [gearStat,navigation]);
   
     const storeDistance = async (value) => {
       try {
@@ -457,11 +444,9 @@ BleManagerModule.Peripheral = {};
     const fetchStoredDistance = async () => {
       try {
         const storedDistance = await AsyncStorage.getItem('distance');
-        console.log(storedDistance);
         if (storedDistance !== null) {
           // AsyncStorage에서 저장된 거리를 가져와 누적된 값으로 설정
           distanceRef.current = parseFloat(storedDistance);
-          console.log(storedDistance)
           setDistance(storedDistance);
         } else {
           // 저장된 거리가 없을 때 기본값 설정
@@ -501,7 +486,7 @@ BleManagerModule.Peripheral = {};
       return () => {
         clearInterval(interval);
       };
-    }, [speed,right,gearStat,fuel,coolant]);
+    }, [speed,engine,gearStat,fuel,coolant,navigation]);
     useEffect(() => {
       const timerId = setInterval(() => {
         runtimeRef.current += 1;
@@ -540,6 +525,33 @@ BleManagerModule.Peripheral = {};
       };  
      },[navigation])
 
+     useLayoutEffect(() => {
+      const interval = setInterval(() => {
+          if (currentFuel < fuel) {
+            //setCurrentSpeed((prevSpeed) => prevSpeed + 1);
+            setCurrentFuel((prevRight) => prevRight + 1);
+          } 
+          else if( currentFuel > fuel)
+          {
+            setCurrentFuel((prevRight) => prevRight - 1);
+          }
+          if (currentCoolant< coolant) {
+            //setCurrentSpeed((prevSpeed) => prevSpeed + 1);
+            setCurrentCoolant((prevRight) => prevRight + 1);
+          } 
+          else if( currentCoolant > coolant)
+          {
+            setCurrentCoolant((prevRight) => prevRight - 1);
+          }
+      }, 10);
+     
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 300);
+      return () => {
+        clearInterval(interval);
+      };
+    }, [fuel,currentFuel,coolant,currentCoolant]);
     useLayoutEffect(() => {
       const interval = setInterval(() => {
           if (currentSpeed < speed) {
@@ -550,13 +562,13 @@ BleManagerModule.Peripheral = {};
           {
             setCurrentSpeed((prevSpeed) => prevSpeed - 1);
           }
-          if (currentRight< right) {
+          if (currentEngine < engine) {
             //setCurrentSpeed((prevSpeed) => prevSpeed + 1);
-            setCurrentRight((prevRight) => prevRight + 1);
+            setCurrentEngine((prevRight) => prevRight + 1);
           } 
-          else if( currentRight > right)
+          else if( currentEngine > engine)
           {
-            setCurrentRight((prevRight) => prevRight - 1);
+            setCurrentEngine((prevRight) => prevRight - 1);
           }
       }, 10);
      
@@ -566,14 +578,7 @@ BleManagerModule.Peripheral = {};
       return () => {
         clearInterval(interval);
       };
-    }, [currentSpeed,speed,right,currentRight]);
-    
- 
-    const ViewPopup = () => {
-        setModal(true);
-        
-    }
-    
+    }, [currentSpeed,speed,engine,currentEngine]);        
   useLayoutEffect(() => {
     Animate.timing(fadeAnim, {
       toValue: imageSource?1:0,
@@ -582,102 +587,156 @@ BleManagerModule.Peripheral = {};
     }).start();
   }, [fadeAnim,imageSource,navigation,images]); 
   
+  const DrawLeftImage = () => {
+    const images = [];
+    for (let i = 0; i <= 50; i++) {
+    images.push(
+      <Image
+        key={i}
+        style={{ width: 0, height: 0 }}
+        source={Gauge_left[i]}
+      />
+    );
+  }
+    return(
+        <View>
+         {images}
+        </View>
+    )
+  }
+  const DrawRightImage = () => {
+    const images = [];
+    for (let i = 0; i <= 50; i++) {
+    images.push(
+      <Image
+        key={i}
+        style={{ width: 0, height: 0 }}
+        source={Gauge_right[i]}
+      />
+    );
+  }
+    return(
+      <View>
+        {images}
+      </View>
+        
+    )
+  }
+  useEffect(() => {
+    // DrawImage 함수를 호출하여 한 번만 실행
+    if(appStart)
+    {
+      DrawLeftImage();
+      DrawRightImage();
+    }
+    // 5초 후에 setAppStart(false) 호출
+    const timer = setTimeout(() => {
+      setAppStart(false);
+    }, 6000);
+  
+    // 컴포넌트가 언마운트될 때 타이머를 클리어하실 수 있습니다.
+    return () => {
+      clearTimeout(timer);
+    }
+  }, [appStart]);
     return(
       <SafeAreaView style={{
         flex: 1,
         backgroundColor: 'black',
         flexDirection: 'row',
       }}>
-      <View style={ImgStyle.content}>
-    <View>
+      {appStart && 
+        <View>
+        <DrawLeftImage/>
+        <DrawRightImage/>
+        </View>
+        }
+        <View style={ImgStyle.content}>
+        <View>
       <ImageBackground source={require('../assets/images/engine/Homescreen.png')} style={Imgstyle.bg} resizeMode="stretch">
       <View style={styles.top}>
         <ImageBackground source={require('../assets/images/engine/gear/img_gear_bg.png')} style={Imgstyle.top_gear}>
         <Animated.Image resizeMode="stretch" source={require('../assets/images/engine/gear/img_gear_text.png')} 
         style={{width:'100%',height:'100%',top:0, transform: [{ rotate: `${degree}deg` }],}}/>       
         </ImageBackground>    
-        <Image resizeMode="stretch" source={imageSource?require('../assets/images/engine/gear/img_mode_manual.png'):require('../assets/images/engine/gear/img_mode_auto.png')} 
+        <Image resizeMode="stretch" source={Mode[gearMode]} 
         style={imageSource?GearImg.mode:GearImg.mode2}/>
-         <FastImage  resizeMode="contain" source={Gear[gearStat]} style={{width:80,height:340,bottom:455, left:440,}}/>
+         <FastImage  resizeMode="contain" source={Gear[gearStat]} style={{width:80,height:340,bottom:455, left:600,}}/>
         
       </View>      
       <View style={styles.imagesContainer}>
-      <View style={styles.left}>
-    
-        {isLoading ? ( <ActivityIndicator size="large" color="#0000ff"/>):
-        (<CrossfadeImage source={Gauge_left[currentSpeed]} style={Imgstyle.left_gauge}  duration={50} easing={Ease.ease}
-          blurRadius={0}/>)
-        }
+      <View style={styles.left}>    
+        <Image source={Gauge_left[currentSpeed]} style={Imgstyle.left_gauge}/>
       </View>
-        <View style={styles.center}>
-        <ImageBackground source={require('../assets/images/engine/img_center_gauge_bg.png')} style={Imgstyle.center_gauge}>
-            <View style={styles.imageContainer}>
-              <FastImage resizeMode="center" source={FuelGauge[fuel]} style={Imgstyle.center_left}/>
-                <View style={styles.imageContainer}>
-                 <Image resizeMode='stretch' source={require('../assets/images/engine/common/fuelgauge_36.png')} style={Imgstyle.fuel}/>
-                 <Image resizeMode='stretch' source={require('../assets/images/engine/common/center_coolant_temp_36.png')} style={Imgstyle.coolant}/>
-                </View>
-              <FastImage resizeMode="center" source={OilGauge[coolant]} style={Imgstyle.center_right}/>
-            </View>
+          <View style={styles.center}>
+          <ImageBackground source={require('../assets/images/engine/img_center_gauge_bg.png')} style={Imgstyle.center_gauge}>
+              <View style={styles.imageContainer}>
+                <Image  source={FuelGauge[currentFuel]} style={{ width:220,height:220,left:150,}}/>
+                  <View style={styles.imageContainer}>
+                   <Image resizeMode='stretch' source={require('../assets/images/engine/common/fuelgauge_36.png')} style={Imgstyle.fuel}/>
+                   <Image resizeMode='stretch' source={require('../assets/images/engine/common/center_coolant_temp_36.png')} style={Imgstyle.coolant}/>
+                  </View>
+                <Image source={OilGauge[currentCoolant]} style={{ width:220,height:220,right:150,}}/>
+              </View>
+            </ImageBackground>
+          </View>
+          <View style={styles.right}>
+          {/* {isLoading ? ( <ActivityIndicator size="large" color="#0000ff"/>):
+          (
+           
+          )} */}{/* {gaugeComponents}     */}
+          <Image
+            source={Gauge_right[currentEngine]}
+            width={450}
+            height={450}
+            style={{
+              width: 450,
+              height: 450,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}          
+          />        
+          </View>
+           <MainButton park={parking} emer={emergency} eng={engine} modal={modal} close={closeModal2} navigation={navigation}/>
+          <View>
+          
+          
+          </View>
+          <View style={TextStyle.distance}>
+          <Text style={TextStyle.text}>주행거리</Text>
+          <Text style={TextStyle.way}>{distance}km</Text>
+          </View>
+          <View style={TextStyle.running_time}>
+          <Text style={TextStyle.text}>주행시간</Text>
+          <Text style={TextStyle.way}>{formatTime(runtimeRef.current)}</Text>
+          </View>
+          <View style={TextStyle.year}>
+          <Text style={TextStyle.text}>현재날짜</Text>
+          <Text style={TextStyle.timer}>{year}{`(${day})`}</Text>
+          </View>
+          <View style={TextStyle.clock}>
+          <Text style={TextStyle.text}>현재시간</Text>
+          <Text style={TextStyle.timer}>{timer}</Text>
+          </View>
+          </View>
+  
+          <TouchableOpacity style={{ position: 'absolute',left:300,top:10,alignItems: 'center',justifyContent: 'center',}} onPress={/* startScan *//* initBluetooth */toggleModal}>
+          {isModalVisible&&<BlueToothModal isVisible={isModalVisible} transparent={true} closeModal={closeModal} setModalVisible={setModalVisible}/>}
+          <Image resizeMode='stretch' source={require('../assets/images/engine/bluetooth.png')} style={{ height:50,width:100,}}/>
+          </TouchableOpacity>
+          <TouchableOpacity style={{ position: 'absolute',right: 150,top:2,alignItems: 'center',justifyContent: 'center',}}>
+          <Image resizeMode='stretch' source={require('../assets/images/engine/img_voice_btn.png')} style={{ height:60,width:120,}}/>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.menuButton} onPress={toggleSidebar} onPressIn={()=>setSidebarClick(true)} onPressOut={()=>setSidebarClick(false)}>
+          <ImageBackground source={require('../assets/images/engine/Rectangle_90.png')} style={styles.default} resizeMode="contain">
+            <Image resizeMode='center' source={require('../assets/images/engine/menu.png')} style={Imgstyle.menu}/>
           </ImageBackground>
-        </View>
-        <View style={styles.right}>
-        {isLoading ? ( <ActivityIndicator size="large" color="#0000ff"/>):
-        (
-        <FastImage
-        source={Gauge_right[currentRight]}
-        duration={50} easing={Ease.ease}
-        blurRadius={0}
-        style={{
-        width:380,
-        height:380,
-        alignItems: 'center',
-        justifyContent: 'center',
-        right:60}}
-      />)}
-        </View>
-        <MainButton/>
-        <View>
-        <TouchableOpacity onPress={ViewPopup} style={{width:100 ,height:50, borderWidth:1, borderColor:'transparent',flex:1,position:'absolute', right:460, top:245, }}>
-        {!modal&&<Image resizeMode='stretch' source={require('../assets/images/engine/img_bottom_popup_btn.png')} style={{position:'relative',width:150,height:45,}}/>}
-        </TouchableOpacity>
-        {modal&&<PopupModal visible={modal} close={closeModal2} style={{top:200,}}/>}
-        </View>
-        <View style={TextStyle.distance}>
-        <Text style={TextStyle.text}>주행거리</Text>
-        <Text style={TextStyle.way}>{distance}km</Text>
-        </View>
-        <View style={TextStyle.running_time}>
-        <Text style={TextStyle.text}>주행시간</Text>
-        <Text style={TextStyle.way}>{formatTime(runtimeRef.current)}</Text>
-        </View>
-        <View style={TextStyle.year}>
-        <Text style={TextStyle.text}>현재날짜</Text>
-        <Text style={TextStyle.timer}>{year}{`(${day})`}</Text>
-        </View>
-        <View style={TextStyle.clock}>
-        <Text style={TextStyle.text}>현재시간</Text>
-        <Text style={TextStyle.timer}>{timer}</Text>
-        </View>
-        </View>
-
-        <TouchableOpacity style={{ position: 'absolute',left:200,top:2,alignItems: 'center',justifyContent: 'center',}} onPress={initBluetooth/* toggleModal */}>
-        {/* {isModalVisible&&<BlueToothModal isVisible={isModalVisible} transparent={true} closeModal={closeModal} setModalVisible={setModalVisible}/>} */}
-        <Image resizeMode='stretch' source={require('../assets/images/engine/bluetooth.png')} style={{ height:40,width:80,}}/>
-        </TouchableOpacity>
-        <TouchableOpacity style={{ position: 'absolute',right: 130,top:2,alignItems: 'center',justifyContent: 'center',}}>
-        <Image resizeMode='stretch' source={require('../assets/images/engine/img_voice_btn.png')} style={{ height:48,width:100,}}/>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuButton} onPress={toggleSidebar} onPressIn={()=>setSidebarClick(true)} onPressOut={()=>setSidebarClick(false)}>
-        <ImageBackground source={require('../assets/images/engine/Rectangle_90.png')} style={styles.default} resizeMode="contain">
-          <Image resizeMode='center' source={require('../assets/images/engine/menu.png')} style={Imgstyle.menu}/>
-        </ImageBackground>
-        </TouchableOpacity>
-        {isSidebarVisible && <Sidebar visible={isSidebarVisible} setSidebar={setSidebarVisible} navigation={navigation}/>}
-      </ImageBackground>     
-    </View>
-    </View>
-    </SafeAreaView>
+          </TouchableOpacity>
+          {isSidebarVisible && <Sidebar visible={isSidebarVisible} setSidebar={setSidebarVisible} navigation={navigation}/>}
+        </ImageBackground>     
+      </View>
+      </View>
+      </SafeAreaView>
   )
 };
 const ImgStyle = StyleSheet.create({
@@ -689,21 +748,22 @@ const ImgStyle = StyleSheet.create({
   },
 
 });
-const GearImg = StyleSheet.create({
+const GearImg = {
   mode:{
-    width:140,
-    height:40,
+    width:220,
+    height:60,
     top:15,
-    left:410,
+    left:525,
     position:'absolute'
   },
   mode2:{
-    width:120,
-    height:35,
-    bottom:55,
-    left:142,
+    width:200,
+    height:60,
+    top:15,
+    left:535,
+    position:'absolute'
   },
-});
+}
 const Imgstyle = {
   bg: {
     width: "100%",
@@ -717,26 +777,27 @@ const Imgstyle = {
   },
   top_gear:{
     position:'relative',
-    width:400,
-    height:400,
+    width:450,
+    height:450,
     bottom:250,
-    marginLeft:280,
+    marginLeft:410,
   },
   left_gauge:{
-    width:380,
-    height:380,
+    width:450,
+    height:450,
     alignItems: 'center',
     justifyContent: 'center',
   },
   center_gauge:{
-    width:200,
-    height:200,
+    width:270,
+    height:270,
+    bottom:100,
     alignItems: 'center',
     justifyContent: 'center',
   },
   right_gauge:{
-    width:380,
-    height:380,
+    width:450,
+    height:450,
     alignItems: 'center',
     justifyContent: 'center',
     right:60,
@@ -747,36 +808,26 @@ const Imgstyle = {
     alignItems:'center',
     bottom:5,
   },
-  center_left:{
-    width:170,
-    height:170,
-    left:120,
-  },
-  center_right:{
-    width:170,
-    height:170,
-    right:120,
-  },
   fuel:{
-    width:36,
-    height:36,
+    width:45,
+    height:45,
     position:'relative',
     left:0,
   },
   coolant:{
     position:'relative',
     left:5,
-    width:36,
-    height:36,
+    width:45,
+    height:45,
   }
 }
 const styles = {
   menuButton: {
     position: 'absolute',
-    top: 10,
-    right: 40,
-    width: 50,
-    height: 50,
+    top: 6,
+    right: 10,
+    borderWidth:1,
+    borderColor:'transparent',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -784,13 +835,14 @@ const styles = {
     alignItems:'center',
     justifyContent:'center',
     height:60,
-    width:110,
-    bottom:10,
+    width:120,
+    bottom:5,
   },
 
   left:{
     flex: 1,
     justifyContent: 'flex-start',
+    bottom:100,
   },
   center:{
     flex: 1,
@@ -801,6 +853,8 @@ const styles = {
   right:{
     flex: 1,
     justifyContent: 'flex-end',
+    bottom:100,
+    right:30,
   },
   top:{
     flex:-1,

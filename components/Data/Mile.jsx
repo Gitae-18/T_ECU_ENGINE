@@ -15,6 +15,8 @@ import DatePicker from 'react-native-date-picker';
 import MileChart from './Charts/MileChart';
 import VehicleInfo from './VehicleInfo';
 import ImageButton from './ImageButton';
+import { useSelector } from 'react-redux';
+import { selectAverageData, selectTotalData, selectLeastData } from '../store/MileSlice';
 
 const Mile = () =>{
     const [open, setOpen] = useState(false);
@@ -23,22 +25,18 @@ const Mile = () =>{
     const [today,setToday] = useState(new Date());
     const [year,setYear] = useState('00/00/00');
     const [year2,setYear2] = useState('00/00/00');
+    const [selectType, setSelectType] = useState('month');
     const [isLoading, setIsLoading] = useState(false);
-    /* useState(
-      [
-        {x:'01',y:'57'},{x:'02',y:'2'},{x:'03',y:'30'},{x:'04',y:'43'},{x:'04',y:'43'},{x:'05',y:'58'},{x:'06',y:'9'},{x:'07',y:'20'},{x:'08',y:'16'},{x:'09',y:'87'},{x:'10',y:'62'}
-        ,{x:'11',y:'40'},{x:'12',y:'57'},{x:'13',y:'85'},{x:'14',y:'97'},{x:'15',y:'91'},{x:'16',y:'49'},{x:'17',y:'10'},{x:'18',y:'74'},{x:'19',y:'35'},{x:'20',y:'7'}
-        ,{x:'21',y:'50'},{x:'22',y:'58'},{x:'23',y:'97'},{x:'24',y:'67'},{x:'25',y:'6'},{x:'26',y:'47'},{x:'27',y:'20'},{x:'28',y:'86'},{x:'29',y:'79'},{x:'30',y:'64'}
-      ],
-    ) */
-    /* const generateData = () => {
-     
-      setData(preGeneratedData);
-     };
-    useEffect(() => {
-      // 컴포넌트가 마운트될 때 데이터 생성 시작
-      generateData();
-    }, []); */
+  /*   const total = useSelector(selectTotalData);
+    const average = useSelector(selectAverageData);
+    const least = useSelector(selectLeastData); */
+    const total = 0;
+    const average = 0;
+    const least = 0;
+    const [istime, setIsTime] = useState(false);
+    const [isDay, setIsDay] = useState(false);
+    const [isMonth, setIsMonth] = useState(false);
+    const [isYear, setIsYear] = useState(false);
     const getData = useCallback(async() => {
       //year ~ year2까지의 데이터를 받아옴
     },[])
@@ -60,24 +58,23 @@ const Mile = () =>{
     useEffect(()=>{
       lastDate();
       currentDate();
-    },[date,today])
-
+    },[date,today,selectType])
 return(
-    <View style={{flex:1,}}>      
-    <ImageBackground source={require('../../assets/images/engine/Rectangle.png')} style={{width:520,height:80, marginLeft:70,top:50}} imageStyle={{borderRadius:10}}>
+    <View style={{flex:1,top:30,}}>      
+    <ImageBackground source={require('../../assets/images/engine/Rectangle.png')} style={{width:700,height:80, marginLeft:70,top:60}} imageStyle={{borderRadius:10}}>
         <View style={{flex:1,flexDirection:'row'}}>
-        <View style={{flex:1,left:5,}}><Text style={{left:30,top:10,fontSize:45,color:'#ffb800',position: 'absolute',fontWeight:'bold',}}>125</Text><Text style={{fontSize:25,position:'absolute',color:'white',left:110,top:30,fontWeight:'bold'}}>km</Text>
-        <Image source={require('../../assets/images/engine/Vector.png')} style={{height:40,left:170,top:20}}resizeMode='stretch'></Image>
+        <View style={{flex:1,left:5,}}><Text style={{left:30,top:5,fontSize:45,color:'#ffb800',position: 'absolute',fontWeight:'bold',}}>{total}</Text><Text style={{fontSize:25,position:'absolute',color:'white',left:125,top:28,fontWeight:'bold'}}>km</Text>
+        <Image source={require('../../assets/images/engine/Vector.png')} style={{height:40,left:220,top:20}}resizeMode='stretch'></Image>
         </View>
-        <View style={{flex:1,left:5,}}><Text style={{left:30,top:10,fontSize:45,color:'#ffb800',position: 'absolute',fontWeight:'bold',}}>85</Text><Text style={{fontSize:25,position:'absolute',color:'white',left:110,top:30,fontWeight:'bold'}}>km</Text>
-        <Image source={require('../../assets/images/engine/Vector.png')} style={{height:40,left:170,top:20}}resizeMode='stretch'></Image>
+        <View style={{flex:1,left:5,}}><Text style={{left:45,top:5,fontSize:45,color:'#ffb800',position: 'absolute',fontWeight:'bold',}}>{Math.round(average)}</Text><Text style={{fontSize:25,position:'absolute',color:'white',left:125,top:28,fontWeight:'bold'}}>km</Text>
+        <Image source={require('../../assets/images/engine/Vector.png')} style={{height:40,left:220,top:20}}resizeMode='stretch'></Image>
         </View>
-        <View style={{flex:1,left:5,}}><Text style={{left:30,top:10,fontSize:45,color:'#ffb800',position: 'absolute',fontWeight:'bold',}}>50</Text><Text style={{fontSize:25,position:'absolute',color:'white',left:110,top:30,fontWeight:'bold'}}>km</Text>
+        <View style={{flex:1,left:5,}}><Text style={{left:45,top:5,fontSize:45,color:'#ffb800',position: 'absolute',fontWeight:'bold',}}>{least}</Text><Text style={{fontSize:25,position:'absolute',color:'white',left:125,top:28,fontWeight:'bold'}}>km</Text>
         </View>
         </View>
     </ImageBackground>
         
-        <View style={{flexDirection:'row'}}>
+        <View style={{flexDirection:'row',left:250,top:10,}}>
         <TouchableOpacity style={{bottom:35,borderWidth:1,borderColor:'transparent',width:150,left:590,height:40,}} onPress={()=> setOpen(true)}>
         <ImageBackground source={require('../../assets/images/engine/Rectangle_108.png')} style={{width:160,height:50,position:'absolute'}} resizeMode='stretch'>
         <Text style={{fontSize:15,color:'white',fontWeight:'bold',left:30,top:15,}}>{year}</Text>
@@ -110,33 +107,57 @@ return(
         </ImageBackground>
         </TouchableOpacity>
         </View>
-        <ImageButton />
-        <ImageBackground source={require('../../assets/images/engine/Rectangle_106.png')} style={{width:800,height:300,left:70,marginTop:30,position:'relative'}} imageStyle={{borderRadius:10}}>
+        <View style={{flexDirection:'row',left:835,top:10,}}>
+        <TouchableOpacity style={{bottom:40,borderWidth:1,borderColor:'transparent',width:120}}  onPressIn={()=>{setIsTime(true);setSelectType('time')}}onPressOut={()=>setIsTime(false)}activeOpacity={1.0}>
+        <ImageBackground source={istime?require('../../assets/images/engine/Rectangle_115.png'):require('../../assets/images/engine/Rectangle_114.png')} style={{width:100,height:60,position:'absolute',justifyContent:'center',alignItems:'center'}} resizeMode='stretch'>
+            <Text style={{fontSize:14,color:'white',fontWeight:'600',}}>Time</Text>
+        </ImageBackground>
+        </TouchableOpacity>
+        <TouchableOpacity style={{bottom:40,borderWidth:1,borderColor:'transparent',width:120,right:40,}} onPressIn={()=>{setIsDay(true);setSelectType('day')}}onPressOut={()=>setIsDay(false)}activeOpacity={1.0}>
+        <ImageBackground source={isDay?require('../../assets/images/engine/Rectangle_115.png'):require('../../assets/images/engine/Rectangle_114.png')} style={{width:100,height:60,position:'absolute',justifyContent:'center',alignItems:'center'}} resizeMode='stretch'>
+            <Text style={{fontSize:14,color:'white',fontWeight:'600',}}>Day</Text>
+        </ImageBackground>
+        </TouchableOpacity>
+        <TouchableOpacity style={{bottom:40,borderWidth:1,borderColor:'transparent',width:120,right:80,}} onPressIn={()=>{setIsMonth(true);setSelectType('month')}}onPressOut={()=>setIsMonth(false)}activeOpacity={1.0}>
+        <ImageBackground source={isMonth?require('../../assets/images/engine/Rectangle_115.png'):require('../../assets/images/engine/Rectangle_114.png')} style={{width:100,height:60,position:'absolute',justifyContent:'center',alignItems:'center'}} resizeMode='stretch'>
+            <Text style={{fontSize:14,color:'white',fontWeight:'600',}}>Month</Text>
+        </ImageBackground>
+        </TouchableOpacity>
+        <TouchableOpacity style={{bottom:40,borderWidth:1,borderColor:'transparent',width:120,right:120}}  onPressIn={()=>{setIsYear(true);setSelectType('year')}}onPressOut={()=>setIsYear(false)}activeOpacity={1.0}>
+        <ImageBackground source={isYear?require('../../assets/images/engine/Rectangle_115.png'):require('../../assets/images/engine/Rectangle_114.png')} style={{width:100,height:60,position:'absolute',justifyContent:'center',alignItems:'center'}} resizeMode='stretch'>
+            <Text style={{fontSize:14,color:'white',fontWeight:'600',}}>Year</Text>
+        </ImageBackground>
+        </TouchableOpacity>
+        </View>
+        <ImageBackground source={require('../../assets/images/engine/Rectangle.png')} style={{width:1100,height:450,left:70,top:30,position:'relative'}} imageStyle={{borderRadius:10}}>
          <View style={{flex:1,flexDirection:'row'}}>
           <Text  style={textStyle.text4}>
-            Max Mileage  <Text style={textStyle.km}>125</Text><Text style={{fontSize:14}}>kw</Text>
+            Max Mileage  <Text style={textStyle.km}>{total}</Text><Text style={{fontSize:14}}>kw</Text>
           </Text>  
-          <Image source={require('../../assets/images/engine/Vector_82.png')} style={{height:20,left:180,top:16,}} resizeMode='stretch'></Image>
+          <Image source={require('../../assets/images/engine/Vector_82.png')} style={{height:20,left:200,top:18,}} resizeMode='stretch'></Image>
           <Text  style={textStyle.text8}>
-            Average Mileage  <Text style={textStyle.km}>85</Text><Text style={{fontSize:14}}>kw</Text>
+            Average Mileage  <Text style={textStyle.km}>{Math.round(average)}</Text><Text style={{fontSize:14}}>kw</Text>
           </Text>  
-          <Image source={require('../../assets/images/engine/Vector_82.png')} style={{height:20,left:390,top:16,}} resizeMode='stretch'></Image>
+          <Image source={require('../../assets/images/engine/Vector_82.png')} style={{height:20,left:420,top:18,}} resizeMode='stretch'></Image>
           <Text  style={textStyle.text12}>
             Min Mileage  <Text style={{ color: '#ffb800',
             fontWeight: 'bold',
             position: 'absolute',
             fontSize: 17,
-            marginLeft:40,}}>50</Text><Text style={{fontSize:14}}>kw</Text>
+            marginLeft:40,}}>{least}</Text><Text style={{fontSize:14}}>kw</Text>
           </Text>  
           </View>
         <View>
-          <MileChart/>
+          <MileChart year={year} sndYear={year2} select={selectType}/>
         </View>
         </ImageBackground>   
-        <View style={{flex:1,width:500,top:60}}>
-                      <Image source={require('../../assets/images/engine/img_divider_line.png')} style={{width:950,bottom:0}}></Image>
+        <View style={{flex:1,width:'100%',height:'100%',top:80}}>
+        <Image source={require('../../assets/images/engine/img_divider_line.png')} style={{width:1300,bottom:0,position:'absolute'}}></Image>
+        
         </View>
-        <VehicleInfo/>
+        <View style={{flex:1}}>
+          <VehicleInfo/>
+        </View>
       </View>
      
 )
@@ -199,7 +220,7 @@ const textStyle= StyleSheet.create({
       position: 'absolute',
       fontSize: 18,
       fontWeight:'600',
-      left:200,
+      left:210,
       top:15,
     },
     text12:{
@@ -207,7 +228,7 @@ const textStyle= StyleSheet.create({
       position: 'absolute',
       fontSize: 18,
       fontWeight:'600',
-      left:410,
+      left:430,
       top:15,
     },
     text5:{

@@ -91,7 +91,7 @@ const System = ({navigation}) => {
         {isSidebarVisible && <Sidebar style={{ zIndex: 1000 }} visible={isSidebarVisible} setSidebar={setSidebarVisible} navigation={navigation} />}
          
         <FlatList
-          style={{ flex: 1, width: '100%', paddingVertical: 10, marginTop:45,}}
+          style={{ flex: 1, width: '100%', paddingVertical: 10, marginTop:50,}}
           nestedScrollEnabled={true}
           data={[
             { key: 'tab1', text: 'T-ECU', left: 70, onPressIn: handlePressInBg1, onPressOut: handlePressOutBg1 },
@@ -99,18 +99,19 @@ const System = ({navigation}) => {
           contentContainerStyle={{ paddingBottom: 100 * (vehicleLength/2)}}
           renderItem={({ item }) => (
             <SafeAreaView>
-            <View style={{zIndex:99,top:70}}>
+            <View style={{zIndex:99,top:0}}>
             <TouchableOpacity
                  onPressIn={handlePressInBg1}
                  onPressOut={handlePressOutBg1}
                  activeOpacity={0.8}
                  style={{ position: 'relative',
-                 width:220,height:35,
+                 width:280,height:35,
                  borderWidth: 1,
                  borderColor: 'transparent', 
                  borderRadius: 10,
-                 left:70,
+                 left:110,
                  zIndex:50,
+                 top:100,
                }}
                >  
                </TouchableOpacity>
@@ -119,12 +120,13 @@ const System = ({navigation}) => {
                  onPressOut={handlePressOutBg2}
                  activeOpacity={0.8}
                  style={{ position: 'absolute' ,
-                 width:220,height:35,
+                 width:280,height:35,
                  borderWidth: 1,
                  borderColor: 'transparent', 
                  borderRadius: 10,
-                 left:370,
+                 left:500,
                  zIndex:50,
+                 top:100,
                }}
                ></TouchableOpacity>
                <TouchableOpacity
@@ -133,11 +135,12 @@ const System = ({navigation}) => {
                  activeOpacity={0.8}
                  style={{ 
                  position: 'absolute',
-                 width:220,height:35,
+                 width:280,height:35,
                  borderWidth: 1,
                  borderColor: 'transparent', 
                  borderRadius: 10,
-                 left:670,
+                 left:890,
+                 top:100,
                  zIndex:50,
                }}
                ></TouchableOpacity>
@@ -147,10 +150,10 @@ const System = ({navigation}) => {
             <ImageBackground
               source={require('../assets/images/engine/bg_tab_3_1.png')}
               style={{flex: 1,
-                width: 950,
-                height: 480,
-                left: 5,
-                top: 25,
+                width: 1250,
+                height: 680,
+                left: 10,
+                marginTop:30,
                 zIndex:zIndex1}}
             >
                <Text style={!isText1 ? TextStyle.txt1 : TextStyle.txt1orange}>
@@ -166,10 +169,10 @@ const System = ({navigation}) => {
               <ImageBackground
               source={require('../assets/images/engine/bg_tab_3_2.png')}
               style={{ flex: 1,
-                width: 950,
-                height: 480,
-                left: 5,
-                top: 25,
+                width: 1250,
+                height: 680,
+                left: 10,
+                marginTop:30,
                 zIndex:zIndex2}}
             >
               <Text
@@ -183,10 +186,10 @@ const System = ({navigation}) => {
             <ImageBackground
               source={require('../assets/images/engine/bg_tab_3_3.png')}
               style={{  flex: 1,
-                width: 950,
-                height: 480,
-                left: 5,
-                top: 25,
+                width: 1250,
+                height: 680,
+                left: 10,
+                marginTop:30,
               zIndex:zIndex3}}
             >
               <Text
@@ -220,48 +223,48 @@ const TextStyle = {
     fontWeight: 'bold',
     position: 'absolute',
     fontSize: 20,
-    left: 140,
-    top: 8,
+    left: 200,
+    top: 35,
   },
   txt1orange: {
     color: 'orange',
     fontWeight: 'bold',
     position: 'absolute',
     fontSize: 20,
-    left: 140,
-    top: 8,
+    left: 200,
+    top: 35,
   },
   txt2: {
     color: 'white',
     fontWeight: 'bold',
     position: 'absolute',
     fontSize: 20,
-    left: 460,
-    top: 8,
+    left: 600,
+    top: 35,
   },
   txt2orange: {
     color: 'orange',
     fontWeight: 'bold',
     position: 'absolute',
     fontSize: 20,
-    left: 460,
-    top: 8,
+    left: 600,
+    top: 35,
   },
   txt3: {
     color: 'white',
     fontWeight: 'bold',
     position: 'absolute',
     fontSize: 20,
-    right: 165,
-    top: 8,
+    right: 220,
+    top: 35,
   },
   txt3orange: {
     color: 'orange',
     fontWeight: 'bold',
     position: 'absolute',
     fontSize: 20,
-    right: 165,
-    top: 8,
+    right: 220,
+    top: 35,
   },
 };
 const styles = {
@@ -309,13 +312,13 @@ const BackImageStyle = {
     left: 5,
     top: 45,
   },
-  transparentOverlay: {
+  blueOverlay: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'transparent',
+    backgroundColor: 'blue',
   },
 };
 System.propTypes = {

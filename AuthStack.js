@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect} from "react";
 
 import Home from './components/Home';
 import Setting from './components/Setting';
@@ -7,7 +7,6 @@ import System from './components/System';
 import Data from './components/Data';
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
 const Stack = createNativeStackNavigator();
 
   const AuthStack = () =>{

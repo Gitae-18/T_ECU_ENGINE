@@ -130,11 +130,11 @@ const Setting = ({navigation}) => {
                    onPressOut={handlePressOutBg1}
                    activeOpacity={0.8}
                    style={{ position: 'absolute',
-                   width:120,height:35,
+                   width:190,height:35,
                    borderWidth: 1,
                    borderColor: 'transparent', 
                    borderRadius: 10,
-                   top:15,
+                   top:35,
                    left:65,
                    zindex:50,
                  }}
@@ -145,12 +145,12 @@ const Setting = ({navigation}) => {
                    onPressOut={handlePressOutBg2}
                    activeOpacity={0.8}
                    style={{ position: 'absolute' ,
-                   width:120,height:35,
+                   width:190,height:35,
                    borderWidth: 1,
                    borderColor: 'transparent', 
                    borderRadius: 10,
-                   left:240,
-                   top:15,
+                   left:300,
+                   top:35,
                    zindex:50,
                  }}
                  ></TouchableOpacity>
@@ -160,12 +160,12 @@ const Setting = ({navigation}) => {
                    activeOpacity={0.8}
                    style={{ 
                    position: 'absolute',
-                   width:120,height:35,
+                   width:190,height:35,
                    borderWidth: 1,
                    borderColor: 'transparent', 
                    borderRadius: 10,
-                   top:15,
-                   left:420,
+                   top:35,
+                   left:540,
                    zindex:50,
                  }}
                  ></TouchableOpacity>
@@ -175,12 +175,12 @@ const Setting = ({navigation}) => {
                    activeOpacity={0.8}
                    style={{ 
                    position: 'absolute',
-                   width:140,height:35,
+                   width:190,height:35,
                    borderWidth: 1,
                    borderColor: 'transparent', 
                    borderRadius: 10,
-                   top:15,
-                   left:590,
+                   top:35,
+                   left:770,
                    zindex:50,
                  }}
                  ></TouchableOpacity>
@@ -190,12 +190,12 @@ const Setting = ({navigation}) => {
                    activeOpacity={0.8}
                    style={{ 
                    position: 'absolute',
-                   width:120,height:35,
+                   width:190,height:35,
                    borderWidth: 1,
                    borderColor: 'transparent', 
                    borderRadius: 10,
-                   top:15,
-                   right:65,
+                   top:35,
+                   right:85,
                    zindex:50,
                  }}
                  ></TouchableOpacity>
@@ -216,8 +216,8 @@ const Setting = ({navigation}) => {
               <ImageBackground
                 source={require('../assets/images/engine/bg_tab_5_1.png')}
                 style={{flex: 1,
-                  width: 950,
-                  height: 580,
+                  width: 1250,
+                  height: 680,
                   top:25,
                   left: 5,
                   zIndex:zIndex1}}
@@ -236,8 +236,8 @@ const Setting = ({navigation}) => {
                 <ImageBackground
                 source={require('../assets/images/engine/bg_tab_5_2.png')}
                 style={{ flex: 1,
-                  width: 950,
-                  height: 580,
+                  width: 1250,
+                  height: 680,
                   left: 5,
                   top: 25,
                   zIndex:zIndex2}}
@@ -254,8 +254,8 @@ const Setting = ({navigation}) => {
               <ImageBackground
                 source={require('../assets/images/engine/bg_tab_5_3.png')}
                 style={{  flex: 1,
-                  width: 950,
-                  height: 580,
+                  width: 1250,
+                  height: 680,
                   left: 5,
                   top: 25,
                 zIndex:zIndex3}}
@@ -273,8 +273,8 @@ const Setting = ({navigation}) => {
               <ImageBackground
                 source={require('../assets/images/engine/bg_tab_5_4.png')}
                 style={{  flex: 1,
-                  width: 950,
-                  height: 580,
+                  width: 1250,
+                  height: 680,
                   left: 5,
                   top: 25,
                 zIndex:zIndex4}}
@@ -292,8 +292,8 @@ const Setting = ({navigation}) => {
               <ImageBackground
                 source={require('../assets/images/engine/bg_tab_5_5.png')}
                 style={{  flex: 1,
-                  width: 950,
-                  height: 580,
+                  width: 1250,
+                  height: 680,
                   left: 5,
                   top: 25,
                 zIndex:zIndex5}}
@@ -338,80 +338,80 @@ const TextStyle = {
     fontWeight: 'bold',
     position: 'absolute',
     fontSize: 20,
-    left: 93,
-    top: 38,
+    left: 123,
+    top: 45,
   },
   txt1orange: {
     color: 'orange',
     fontWeight: 'bold',
     position: 'absolute',
     fontSize: 20,
-    left: 93,
-    top: 38,
+    left: 123,
+    top: 45,
   },
   txt2: {
     color: 'white',
     fontWeight: 'bold',
     position: 'absolute',
     fontSize: 20,
-    left: 260,
-    top: 38,
+    left: 343,
+    top: 45,
   },
   txt2orange: {
     color: 'orange',
     fontWeight: 'bold',
     position: 'absolute',
     fontSize: 20,
-    left: 260,
-    top: 38,
+    left: 343,
+    top: 45,
   },
   txt3: {
     color: 'white',
     fontWeight: 'bold',
     position: 'absolute',
     fontSize: 20,
-    left: 420,
-    top: 38,
+    left: 560,
+    top: 45,
   },
   txt3orange: {
     color: 'orange',
     fontWeight: 'bold',
     position: 'absolute',
     fontSize: 20,
-    left: 420,
-    top: 38,
+    left: 560,
+    top: 45,
   },
   txt4: {
     color: 'white',
     fontWeight: 'bold',
     position: 'absolute',
     fontSize: 20,
-    right:238,
-    top: 38,
+    right:320,
+    top: 45,
   },
   txt4orange: {
     color: 'orange',
     fontWeight: 'bold',
     position: 'absolute',
     fontSize: 20,
-    right:238,
-    top: 38,
+    right:320,
+    top: 45,
   },
   txt5: {
     color: 'white',
     fontWeight: 'bold',
     position: 'absolute',
     fontSize: 20,
-    right:65,
-    top: 38,
+    right:95,
+    top: 45,
   },
   txt5orange: {
     color: 'orange',
     fontWeight: 'bold',
     position: 'absolute',
     fontSize: 20,
-    right:65,
-    top: 38,
+    right:95,
+    top: 45,
   },
 };
 const styles = {

@@ -169,19 +169,19 @@ const VehicleInfo = () => {
       }
     return(
         <View style={{flex:1,top:0}}>
-        <Text style={{ color: 'white',fontWeight: 'bold',position: 'absolute',fontSize: 20,left:30,top:80,}}>· 차량 등록 정보</Text>
+        <Text style={{ color: 'white',fontWeight: 'bold',position: 'absolute',fontSize: 24,left:40,top:90,}}>· 차량 등록 정보</Text>
         <TouchableOpacity onPress={exportDataToExcel}>
-          <ImageBackground source={require('../../assets/images/engine/basic_btn.png')} style={{width:120,height:60,top:70,left:730,justifyContent:'center',alignItems:'center',padding:5,}}imageStyle={{borderRadius:10}}resizeMode="stretch">
+          <ImageBackground source={require('../../assets/images/engine/basic_btn.png')} style={{width:120,height:60,top:90,left:1080,justifyContent:'center',alignItems:'center',padding:5,}}imageStyle={{borderRadius:10}}resizeMode="stretch">
             <Text style={{color:'white',fontSize:14,fontWeight:'bold',fontFamily:'Inter',}}>Excel</Text>
           </ImageBackground>
         </TouchableOpacity>
-        <TouchableOpacity>
+{/*         <TouchableOpacity>
           <ImageBackground source={require('../../assets/images/engine/basic_btn.png')} style={{width:120,height:60,top:70,left:830,justifyContent:'center',alignItems:'center',padding:5,}}imageStyle={{borderRadius:10}}resizeMode="stretch">
             <Image source={require('../../assets/images/engine/menu.png')}style={{width:'100%',height:'100%'}} resizeMode='center'/>
           </ImageBackground>
-        </TouchableOpacity>
-        <View style={{flex:1}}>
-        <Text style={{  color:'white',      fontWeight:'bold',      position: 'absolute',    fontSize:15,top:140,left:50,}}>Time</Text>
+        </TouchableOpacity> */}
+        <View style={{flex:1,top:10,}}>
+        <Text style={{color:'white', fontWeight:'bold', position: 'absolute', fontSize:15,top:140,left:50,}}>Time</Text>
         <Text style={{color:'white',
           fontWeight:'bold',
           position: 'absolute',
@@ -207,37 +207,37 @@ const VehicleInfo = () => {
           top:140,
           left:410,}}>Average</Text>
           </View>
-          <View style={{flex:1}}>
-        <Text style={{color:'white',
-          fontWeight:'bold',
-          position: 'absolute',
-          fontSize:15,
-          top:140,
-          left:510,}}>Time</Text>
-        <Text style={{color:'white',
-          fontWeight:'bold',
-          position: 'absolute',
-          fontSize:15,
-          top:140,
-          left:565,}}>Today</Text>
+          <View style={{flex:1,top:10,}}>
           <Text style={{color:'white',
-          fontWeight:'bold',
-          position: 'absolute',
-          fontSize:15,
-          top:140,
-          left:635,}}>Last Day</Text>
+            fontWeight:'bold',
+            position: 'absolute',
+            fontSize:15,
+            top:140,
+            left:510,}}>Time</Text>
           <Text style={{color:'white',
-          fontWeight:'bold',
-          position: 'absolute',
-          fontSize:15,
-          top:140,
-          left: 720,}}>Same day last year</Text>
-          <Text style={{color:'white',
-          fontWeight:'bold',
-          position: 'absolute',
-          fontSize:15,
-          top:140,
-          left:865,}}>Average</Text>
+            fontWeight:'bold',
+            position: 'absolute',
+            fontSize:15,
+            top:140,
+            left:565,}}>Today</Text>
+            <Text style={{color:'white',
+            fontWeight:'bold',
+            position: 'absolute',
+            fontSize:15,
+            top:140,
+            left:635,}}>Last Day</Text>
+            <Text style={{color:'white',
+            fontWeight:'bold',
+            position: 'absolute',
+            fontSize:15,
+            top:140,
+            left: 720,}}>Same day last year</Text>
+            <Text style={{color:'white',
+            fontWeight:'bold',
+            position: 'absolute',
+            fontSize:15,
+            top:140,
+            left:865,}}>Average</Text>
           </View>
           <View style={{flex:1,top:170,flexDirection:'row'}}>
            <ImageBackground source={require('../../assets/images/engine/bg_table_off.png')} style={{width:450,height:350,left:40}} imageStyle={{borderRadius:20}}>

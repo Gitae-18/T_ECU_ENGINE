@@ -131,7 +131,6 @@ const T_ECU = ({itemVal}) =>{
         await addLog(`[${getCurrentDateTime()}] Success Connected 211.246.74.11`);
         console.debug('connected');
         //        setConnectModal(true);
-        alert('성공적으로 연결되었습니다.');
         }
         catch(e){
           console.log(e);
@@ -143,7 +142,6 @@ const T_ECU = ({itemVal}) =>{
         await addLog(`[${getCurrentDateTime()}] End Received T-ECU data .......`);
         await addLog(`[${getCurrentDateTime()}] End Preprocessing .......`); 
         //setId((prevIds) => prevIds.slice(0, prevIds.length - 1));
-        alert('연결이 해제되었습니다.');
         console.debug('disconnected');
         }
         catch(e)
@@ -173,8 +171,6 @@ const T_ECU = ({itemVal}) =>{
         await deleteDoc(doc(db, 'users', id))
         console.log("삭제되었습니다.")
       },[])
-
-
      
       const getCurrentDateTime = () => {
         const now = new Date();
@@ -188,27 +184,27 @@ const T_ECU = ({itemVal}) =>{
       };
       const OnAddVehicle = () =>{
         return(
-          <View style={{flex:1,flexDirection:'row',marginTop:50,}}>
-         <View style={{flex:1,left:35,marginTop:50,}}>
+          <View style={{flex:1,flexDirection:'row',marginTop:50,marginLeft:100,}}>
+         <View style={{flex:1,left:20,marginTop:50,}}>
                 {device ? device.map((item, index) => (
-                  <View key={item.id} style={{margin:0, padding:0,height:50,}}>
-                  <ImageBackground source={require('../../assets/images/engine/img_table_box_outer.png')} style={{width:700,height:40,justifyContent:'center',alignItems:'baseline',top:27,}}>
+                  <View key={item.id} style={{margin:0, padding:0,height:50,marginTop:10,}}>
+                  <ImageBackground source={require('../../assets/images/engine/img_table_box_outer.png')} style={{width:900,height:50,justifyContent:'center',alignItems:'baseline',top:27}}>
                   <View style={{flexDirection:'row'}}>
-                  <Text style={{color:'white',fontSize:16,flex:1}}>{item.name}</Text>
-                  <Text style={{color:'white',fontSize:16,flex:1}}>{item.model}</Text>
-                  <Text style={{color:'white',fontSize:16,flex:0.6 ,left:10}}>{item.type}</Text>
-                  <Text style={{color:'white',fontSize:16,flex:2}}>{item.MAC}</Text>
-                  <Text style={{color:'white',fontSize:16,flex:1}}>{item.productor}</Text>
-                  <Text style={{color:'white',fontSize:16,flex:2}}>{item.created}</Text>
+                  <Text style={{color:'white',fontSize:16,flex:1,left:8}}>{item.name}</Text>
+                  <Text style={{color:'white',fontSize:16,flex:1,left:8}}>{item.model}</Text>
+                  <Text style={{color:'white',fontSize:16,flex:0.6 ,left:9}}>{item.type}</Text>
+                  <Text style={{color:'white',fontSize:16,flex:2,left:8}}>{item.MAC}</Text>
+                  <Text style={{color:'white',fontSize:16,flex:1,left:8}}>{item.productor}</Text>
+                  <Text style={{color:'white',fontSize:16,flex:2,left:10}}>{item.created}</Text>
                   </View>
                   </ImageBackground>
-                  <TouchableOpacity style={{left:700,bottom:15}} onPress={()=> handleModifyPress(item.id,item.name)}>
+                  <TouchableOpacity style={{left:920,bottom:20}} onPress={()=> handleModifyPress(item.id,item.name)}>
                     <ImageBackground source={require('../../assets/images/engine/img_table_box_btn.png')} style={{width:100,height:50,justifyContent:'center',alignItems:'center'}}>
                     <Text style={{color:'white',fontSize:18}}>수정</Text>
                     </ImageBackground>
                   </TouchableOpacity>
                  
-                  <TouchableOpacity style={{left:800,bottom:65}} onPress={()=>onDelete(item.id)}>
+                  <TouchableOpacity style={{left:1020,bottom:70}} onPress={()=>onDelete(item.id)}>
                     <ImageBackground source={require('../../assets/images/engine/img_table_box_btn.png')} style={{width:100,height:50,justifyContent:'center',alignItems:'center'}}>
                       <Text style={{color:'white',fontSize:18}}>삭제</Text>
                     </ImageBackground>
@@ -230,7 +226,7 @@ return(
      <Text style={textStyle.text1}>· T-ECU 연결관리</Text>
       
      <SafeAreaView>
-      <DropDownPicker style={{backgroundColor:'#161413',width:160,left:220,top:50,color:'white'}} placeholderStyle={{
+      <DropDownPicker style={{backgroundColor:'#161413',width:200,left:270,top:90,color:'white'}} placeholderStyle={{
         color: "white",
         fontWeight: "bold"
       }}
@@ -240,11 +236,11 @@ return(
         onPress={updatedItems}
         labelStyle={{color: 'white',fontWeight:'bold'}}
         open={open} items={items} value={value} setOpen={setOpen} setValue={setValue} setItems={setItems} dropDownDirection="BOTTOM"dropDownContainerStyle={{
-        backgroundColor: "#dfdfdf",width:160,left:220,top:100,
+        backgroundColor: "#dfdfdf",width:200,left:270,top:140,
         }}/>
      </SafeAreaView>
       <Text style={textStyle.text2}>·MAC Address</Text>
-      <DropDownPicker style={{backgroundColor:'#161413',width:220,height:50,left:550,color:'white'}} placeholderStyle={{
+      <DropDownPicker style={{backgroundColor:'#161413',width:300,height:50,top:40,left:750,color:'white'}} placeholderStyle={{
         color: "white",
         fontWeight: "bold"
       }}
@@ -274,7 +270,7 @@ return(
       </View>
       <View style={{flex:1 ,flexDirection:'row'}}>
       <Text style={textStyle.text3}>· 접속 Log 정보</Text>  
-      <TouchableOpacity style={{height:40, left:200, bottom:25, position:'relative',borderWidth:1,borderColor:'transparent'}} onPress={onClear}>
+      <TouchableOpacity style={{height:50, left:240, bottom:-5, position:'relative',borderWidth:1,borderColor:'transparent'}} onPress={onClear}>
         <ImageBackground source={require('../../assets/images/engine/basic_btn.png')} resizeMode='stretch'style={{width:70,height:40,justifyContent:'center',}} >
         <Text style={{textAlign:'center',color:'white'}}>Clear</Text>
         </ImageBackground>
@@ -282,29 +278,29 @@ return(
         </View>
         {connectModal&& <ConnectModal close={handleModal} visible={connectModal}/>}
       <View style={{ width:900,height:350,top:20,}}>
-      <ImageBackground source={require('../../assets/images/engine/bg_table_off.png')} style={{width:800,height:300,left:70,top:5,}} imageStyle={{borderRadius:10}}> 
+      <ImageBackground source={require('../../assets/images/engine/bg_table_off.png')} style={{width:1100,height:430,left:70,top:30,}} imageStyle={{borderRadius:10}}> 
         <FlatList style={{flex:1,}}  nestedScrollEnabled={true}
         data = {logs}
         overScrollMode="always"
         contentContainerStyle={{ paddingBottom:20, flexGrow:1, height: '100%'}}
         keyExtractor={(item)=> item.temp.toString()}
         renderItem={({item,index})=>(
-          <Text style={{color: 'white',fontSize: 18,}}>
-               <Text style={{ color: 'white', fontSize: 18 }}>
+          <View style={{color: 'white',fontSize: 20, padding:10}}>
+               <Text style={{ color: 'white', fontSize: 20 }}>
                 {item.log}
               </Text>
-           </Text> 
+           </View> 
         )}
         listKey={(item,index) => 'item'+index.toString()}
         />                         
         </ImageBackground>  
         </View> 
-        <View style={{flex:1,width:500,top:50}}>
-                      <Image source={require('../../assets/images/engine/img_divider_line.png')} style={{width:1200,bottom:0}}></Image>
+        <View style={{flex:1,top:170}}>
+                      <Image source={require('../../assets/images/engine/img_divider_line.png')} style={{width:1260}}></Image>
         </View>
-        <View style={{ flex:1 , maxHeight:2000,}}>
+        <View style={{ flex:1 , maxHeight:2000,marginTop:130}}>
         <Text style={textStyle.text5}>· 차량 등록 정보</Text>
-        <TouchableOpacity style={{borderWidth:1,borderColor:'transparent',width:100,height:50,top:60,left:800}}onPress={()=>setAddModel(true)}>
+        <TouchableOpacity style={{borderWidth:1,borderColor:'transparent',width:100,height:50,top:60,left:1030}}onPress={()=>setAddModel(true)}>
           <ImageBackground source={require('../../assets/images/engine/basic_btn.png')} style={{width:120,height:60,justifyContent:'center',alignItems:'center',padding:5,}}imageStyle={{borderRadius:10}}>
             <Text style={{color:'white',fontSize:14,fontWeight:'bold',fontFamily:'Inter'}}>신규 등록</Text>
           </ImageBackground>
@@ -316,42 +312,42 @@ return(
         <Text style={{color:'white',
           fontWeight:'bold',
           position: 'absolute',
-          fontSize:18,
+          fontSize:19,
           top:140,
-          left:120,}}>MODEL</Text>
+          left:245,}}>MODEL</Text>
           <Text style={{color:'white',
           fontWeight:'bold',
           position: 'absolute',
-          fontSize:18,
+          fontSize:19,
           top:140,
-          left:220,}}>타입</Text>
+          left:355,}}>타입</Text>
+           <Text style={{color:'white',
+          fontWeight:'bold',
+          position: 'absolute',
+          fontSize:19,
+          top:140,
+          left:665,}}>제조자</Text>
           <Text style={{color:'white',
           fontWeight:'bold',
           position: 'absolute',
-          fontSize:18,
+          fontSize:19,
           top:140,
-          left:320,}}>MAC</Text>
+          left:470,}}>MAC</Text>         
           <Text style={{color:'white',
           fontWeight:'bold',
           position: 'absolute',
-          fontSize:18,
+          fontSize:19,
           top:140,
-          left:450,}}>제조자</Text>
+          left:1120,}}>관리</Text>
           <Text style={{color:'white',
           fontWeight:'bold',
           position: 'absolute',
-          fontSize:18,
+          fontSize:19,
           top:140,
-          left:580,}}>등록 일시</Text>
-          <Text style={{color:'white',
-          fontWeight:'bold',
-          position: 'absolute',
-          fontSize:18,
-          top:140,
-          left:815,}}>관리</Text>
+          left:850,}}>등록 일시</Text>
+          
         <OnAddVehicle/>
         </View>   
-
       </View>
      
 )
@@ -368,6 +364,8 @@ const styles = StyleSheet.create({
     justifyContent:'center',
     alignItems:'center',
     bottom:3,
+    left:285,
+    top:35,
   },
   touchable: {
     alignItems: 'center',
@@ -386,25 +384,25 @@ const textStyle= StyleSheet.create({
         color: 'white',
         fontWeight: 'bold',
         position: 'absolute',
-        fontSize: 20,
-        left: 60,
-        top: 60,
+        fontSize: 22,
+        left: 70,
+        top: 95,
     },
     text2:{
         color: 'white',
         fontWeight: 'bold',
         position: 'absolute',
-        fontSize: 20,
-        left: 400,
-        top: 60,
+        fontSize: 22,
+        left: 580,
+        top: 95,
     },
     text3:{
       color: 'white',
       fontWeight: 'bold',
       position: 'absolute',
-      fontSize: 20,
-      left: 60,
-      bottom:-10,
+      fontSize: 22,
+      left: 70,
+      top:10,
     },
     text4:{
       color: 'white',
@@ -415,8 +413,8 @@ const textStyle= StyleSheet.create({
       color: 'white',
       fontWeight: 'bold',
       position: 'absolute',
-      fontSize: 20,
-      left:30,
+      fontSize: 24,
+      left:45,
       top:80,
     },
     infotext:{
@@ -425,6 +423,6 @@ const textStyle= StyleSheet.create({
       position: 'absolute',
       fontSize:18,
       top:140,
-      left:60,
+      left:145,
     }
 })

@@ -83,43 +83,43 @@ import { StyleSheet, Text,  View,Image, ImageBackground, /* Pressable, */ Toucha
               </ImageBackground>
               </TouchableOpacity>
    
-              <Image source={require('../assets/images/engine/img_slidemenu_contour_bar.9.png')} style={alignStyle.sidebar_underline}/>
+              <Image source={require('../assets/images/engine/img_slidemenu_contour_bar.9_0.png')} style={alignStyle.sidebar_underline}/>
   
-              <TouchableOpacity style={alignStyle.sidebar_first_box}  onPressIn={onClickDashBoard} onPressOut={onDashBoardOut} activeOpacity={0.8}>
+              <TouchableOpacity style={alignStyle.sidebar_first_box}  onPressIn={onClickDashBoard} onPressOut={onDashBoardOut} activeOpacity={0.8}/>
                   <ImageBackground source={require('../assets/images/engine/buttonback.png')} style={Imgstyle.DashBoardBtn}>
                       <View>
                         <Image source={isdashboard?require('../assets/images/engine/dashboard_true.png'):require('../assets/images/engine/dashboard_false.png')} resizeMode='center' style={Imgstyle.dashbtn}/>
                       </View>              
-                        <Text style={isdashboard?TextStyle.backtext:TextStyle.backtextorange}>DASHBOARD</Text>              
+                        <Text style={isdashboard?TextStyle.back:TextStyle.backorange}>DASHBOARD</Text>              
                   </ImageBackground>
-               </TouchableOpacity>
+      
   
-              <TouchableOpacity  onPressIn={onClickSystem} onPressOut={onSystemOut} activeOpacity={0.8}>
+              <TouchableOpacity style={{position:'absolute',top:350,borderWidth:1,borderColor:'transparent',height:70,width:250,left:120,zIndex:500,}} onPressIn={onClickSystem} onPressOut={onSystemOut} activeOpacity={0.8}/>
                 <ImageBackground source={require('../assets/images/engine/buttonback.png')} style={Imgstyle.SystemBtn}>
                   <View>
                     <Image source={issystem?require('../assets/images/engine/icon_system_50_true.png'):require('../assets/images/engine/icon_system_50_false.png')} resizeMode='center' style={Imgstyle.backbtn}/>
                   </View>              
                   <Text style={issystem?TextStyle.backtext:TextStyle.backtextorange}>SYSTEM</Text>              
                 </ImageBackground>
-              </TouchableOpacity>
+      
   
-              <TouchableOpacity  onPressIn={onClickSetting} onPressOut={onSettingOut} activeOpacity={0.8}>
+              <TouchableOpacity   style={{position:'absolute',top:500,borderWidth:1,borderColor:'transparent',height:70,width:250,left:120,zIndex:500,}} onPressIn={onClickSetting} onPressOut={onSettingOut} activeOpacity={0.8}/>
                 <ImageBackground source={require('../assets/images/engine/buttonback.png')} style={Imgstyle.SettingBtn}>
                   <View>
                     <Image source={issetting?require('../assets/images/engine/icon_setting_50_true.png'):require('../assets/images/engine/icon_setting_50_false.png')} resizeMode='center' style={Imgstyle.backbtn}/>
                   </View>              
                   <Text style={issetting?TextStyle.backtext:TextStyle.backtextorange}>SETTING</Text>              
                 </ImageBackground>
-              </TouchableOpacity>
+              
   
-              <TouchableOpacity  onPressIn={onClickData} onPressOut={onDataOut} activeOpacity={0.8}>
+              <TouchableOpacity  style={{position:'absolute',top:650,borderWidth:1,borderColor:'transparent',height:70,width:250,left:120,zIndex:500,}} onPressIn={onClickData} onPressOut={onDataOut} activeOpacity={0.8}/>
                 <ImageBackground source={require('../assets/images/engine/buttonback.png')} style={Imgstyle.DataBtn}>
                   <View>
                    <Image source={isdata?require('../assets/images/engine/icon_data_50_true.png'):require('../assets/images/engine/icon_data_50_false.png')} resizeMode='center' style={Imgstyle.backbtn}/>
                   </View>
                     <Text style={isdata?TextStyle.backtext:TextStyle.backtextorange}>DATA</Text>              
                 </ImageBackground>
-              </TouchableOpacity>
+             
   
             </ImageBackground>
           </Animated.View> 
@@ -129,48 +129,49 @@ import { StyleSheet, Text,  View,Image, ImageBackground, /* Pressable, */ Toucha
   };
   const Imgstyle = StyleSheet.create({
     imgWrapper: {
-      width: '100%',
+      marginLeft:300,
+      width: 450,
       height: '100%',
       zIndex:1000,
     },
     slidemenubtn: {
       width: 250,
-      height: 70,
+      height: 80,
       marginTop: 30,
-      marginLeft: 150,
+      marginLeft: 120,
       borderRadius:50,
     },
     DashBoardBtn:{
       width: 250,
-      height: 70,
-      marginTop: 30,
-      marginLeft: 150,
+      height: 80,
+      marginTop: 70,
+      marginLeft: 120,
     },
     SystemBtn:{
       width: 250,
-      height: 70,
-      marginTop: 40,
-      marginLeft: 150,
+      height: 80,
+      marginTop: 80,
+      marginLeft: 120,
     },
     SettingBtn:{
       width: 250,
-      height: 70,
-      marginTop: 30,
-      marginLeft: 150,
+      height: 80,
+      marginTop: 70,
+      marginLeft: 120,
     },
     DataBtn:{
       width: 250,
-      height: 70,
-      marginTop: 30,
-      marginLeft: 150,
+      height: 80,
+      marginTop: 70,
+      marginLeft: 120,
     },
     backbtn: {
       marginLeft: 30,
-      marginTop: 10,
+      marginTop: 15,
     },
     dashbtn: {
       marginLeft: 30,
-      marginTop: 10,
+      marginTop: 15,
       borderRadius:30,
     },
     default:{
@@ -185,17 +186,37 @@ import { StyleSheet, Text,  View,Image, ImageBackground, /* Pressable, */ Toucha
   
   const alignStyle = StyleSheet.create({
     sidebar_first_box:{
-      position:'relative',
-      top:15,
+      position:'absolute',
+      top:190,
+      left:120,
+      borderWidth:1,
+      borderColor:'transparent',
+      height:70,
+      width:250,
+      zIndex:500,
     },
     sidebar_underline:{
-      width:'48%',
+      width:'80%',
       position:'relative',
-      top:20,
-      left:100,
+      top:40,
+      left:70,
     }
   });
   const TextStyle = StyleSheet.create({
+    back: {
+      color: 'white',
+      marginLeft: 115,
+      position: 'relative',
+      bottom: 35,
+      fontWeight:'bold',
+    },
+    backorange: {
+      color: 'orange',
+      marginLeft: 120,
+      position: 'relative',
+      bottom: 35,
+      fontWeight:'bold',
+    },
     backtext: {
       color: 'white',
       marginLeft: 120,
